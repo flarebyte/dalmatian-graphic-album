@@ -1,0 +1,154 @@
+namespace Dalmatian;
+file_extension "dln";
+
+attribute "priority";
+
+struct IRIMeta {
+    id:short;
+    prefix: string;
+    suffix: string;
+    mediaType: string;
+    language: string;
+}
+
+struct IRI {
+    locator:string;
+    meta:short;
+}
+
+struct Dimension2D {
+    width: uint32;
+    height: uint32;
+}
+
+struct StringInfo {
+    info: string;
+    iri: IRI;
+}
+
+// https://en.wikipedia.org/wiki/Dublin_Core
+
+table Metadata {
+    language: string;
+    dimension: Dimension2D;
+    dpi: uint16;
+
+    // https://en.wikipedia.org/wiki/Dublin_Core
+
+    identifier: StringInfo;
+    title: StringInfo;
+    description: StringInfo;
+    creator: [StringInfo];
+    contributor: [StringInfo];
+    publisher: [StringInfo];
+    subject: [StringInfo];
+    relation: [StringInfo];
+    format: [StringInfo];
+    audience: [StringInfo];
+    spatial: [StringInfo];
+    temporal: [StringInfo];
+    
+    // Rights
+    license: StringInfo;
+    rights: StringInfo;
+    attribution: StringInfo; //cc
+
+    // Time: https://en.wikipedia.org/wiki/ISO_8601
+    created: string;
+    modified: string;
+
+    // Linking
+    isVersionOf: IRI;
+    hasVersion: IRI;
+    hasFormat: [IRI]; // A related resource that is substantially the same but in another format.
+    isPartOf: [IRI];
+    hasPart: [IRI];
+
+
+}
+
+table Color {
+    name: StringInfo;
+    colorSpace: StringInfo;
+    value: string;
+}
+
+struct Tile255x255 {
+    rle: [uint32]; // Run length encoding
+}
+
+struct RunLengthEncoding255x255 {
+    tiles: [Tile255x255];
+    dimension: Dimension2D;
+}
+
+struct Compressed255x255 {
+    data: [uint32];
+    dimension: Dimension2D;
+    encoding: StringInfo;
+}
+
+enum: byte Truth {Yes, No}
+
+struct Effect {
+    processor: StringInfo;
+    script: string;
+    optional: Truth;
+}
+
+struct VisualPath {
+
+}
+
+struct MoveTo {
+
+}
+
+struct LineTo {
+
+}
+
+struct CubicCurve {
+
+}
+
+struct QuadraticCurve {
+
+}
+
+struct EllipticalCurve {
+
+}
+
+struct ClosePath {
+
+}
+
+union CurveAction {MoveTo, LineTo, CubicCurve, QuadraticCurve, EllipticalCurve, ClosePath}
+
+union LayerData {RunLengthEncoding255x255, Compressed255x255}
+
+table Layer {
+    id: uint32;
+    data: LayerData;
+    format: StringInfo;
+    color0: [Color]; // each should represent the same color in different color space
+    color1: [Color];
+    relation: [StringInfo]; //tags
+    description: StringInfo;
+    effects: [Effect];
+}
+
+
+table MonoColorChunk {
+    id: uint32;
+    data: RunLengthEncoding255x255;
+}
+
+table Image {
+  metadata:Metadata;
+  layers: [Layer];
+  effects: [Effect]
+}
+
+root_type Image;

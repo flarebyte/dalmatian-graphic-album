@@ -21,11 +21,6 @@ struct Dimension2D {
     height: uint32;
 }
 
-struct Dimension360 {
-    width: uint32;
-    height: uint32;
-}
-
 struct StringInfo {
     info: string;
     iri: IRI;
@@ -42,7 +37,6 @@ table Metadata {
     version: StringInfo;
     language: string;
     dimension: Dimension2D;
-    dimension360: Dimension360;
     dpi: uint16;
 
     // https://en.wikipedia.org/wiki/Dublin_Core
@@ -217,14 +211,24 @@ table Layer {
     color0: [Color]; // each should represent the same color in different color space
     color1: [Color];
     description: StringInfo;
-    effects: [Effect];
+    effect: [Effect];
     related: [Relation]; //tags
+}
+
+table Publishing {
+    medium: StringInfo; // The material or physical carrier of the resource. ex: Paper, Screen, Storage, 3D glasses
+    format: StringInfo; // The file format, physical medium, or dimensions of the resource. Ex: A4, jpeg
+    style: [IRI]; // ex: black and white, Manga
+    dimension: Dimension2D;
+    dpi: uint16;
+    related: [Relation];
+    effect: [Effect];
 }
 
 table Image {
   metadata:Metadata;
-  layers: [Layer];
-  effecs: [Effect]
+  layer: [Layer];
+  publishing: [Publishing];
 }
 
 root_type Image;

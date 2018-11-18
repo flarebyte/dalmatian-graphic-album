@@ -2,13 +2,13 @@
 import test from 'ava';
 
 import { readDalmatianImage } from './dalmatian';
+import { Color } from './schema/dalmatian_generated';
 
 test('toArray', t => {
   const data = new Uint8Array();
   const actual = readDalmatianImage(data);
-  t.is(actual.color.length, 0);
-  t.is(actual.iriSpace.length, 0);
-  t.is(actual.processor.length, 0);
-  t.is(actual.publishing.length, 0);
-  t.is(actual.layer.length, 0);
+   const color = actual.color(0);
+   
+  t.is(color., );
+  
 });

@@ -3,93 +3,18 @@ file_extension "dln";
 
 attribute "priority";
 
-struct IRIMeta {
-    id:short;
-    prefix: string;
-    suffix: string;
-    mediaType: string;
-    language: string;
-}
-
-struct IRI {
-    locator:string;
-    meta:short;
-}
+// structures
 
 struct Dimension2D {
     width: uint32;
     height: uint32;
 }
 
-struct StringInfo {
-    info: string;
-    iri: IRI;
-}
-struct Relation {
-    predicate: IRI;
-    resource: IRI;
-}
-
-// https://en.wikipedia.org/wiki/Dublin_Core
-
-table Metadata {
-    identifier: StringInfo;
-    version: StringInfo;
-    language: string;
-    dimension: Dimension2D;
-    dpi: uint16;
-
-    // https://en.wikipedia.org/wiki/Dublin_Core
-
-    title: StringInfo;
-    description: StringInfo;
-    creator: [StringInfo];
-    contributor: [StringInfo];
-    publisher: [StringInfo];
-    
-    // Rights
-    license: StringInfo;
-    rights: StringInfo;
-    attribution: StringInfo; //cc
-
-    // Time: https://en.wikipedia.org/wiki/ISO_8601
-    created: string;
-    modified: string;
-
-    // Linking
-    related: [Relation];
- 
-}
-
-table Color {
-    name: StringInfo;
-    colorSpace: StringInfo;
-    value: string;
-}
-
-enum: byte Truth {Yes, No}
-
-struct Processor {
-    name: StringInfo;
-    version: StringInfo;
-}
-
-struct Script {
-    processor: Processor;
-    content: string;
-}
-
-struct Effect {
-    before: Script;
-    main: Script;
-    after: Script;
-    optional: Truth;
-}
-
 struct MoveTo {
     x: uint32;
     y: uint32;
 }
+
 struct LineTo {
     x: uint32;
     y: uint32;
@@ -131,6 +56,97 @@ struct SmoothQuadraticCurve {
     y: uint32;
 }
 
+// tables
+
+table ArrayOfU64 {
+    data: [uint64];
+}
+table ArrayOfU32 {
+    data: [uint32];
+}
+table ArrayOfU16 {
+    data: [uint16];
+}
+table ArrayOfU8 {
+    data: [uint8];
+}
+
+table IRIMeta {
+    id:short;
+    prefix: string;
+    suffix: string;
+    mediaType: string;
+    language: string;
+}
+
+table IRI {
+    locator:string;
+    meta:short;
+}
+
+table StringInfo {
+    info: string;
+    iri: IRI;
+}
+table Relation {
+    predicate: IRI;
+    resource: IRI;
+}
+
+// https://en.wikipedia.org/wiki/Dublin_Core
+
+table Metadata {
+    identifier: StringInfo;
+    version: StringInfo;
+    language: string;
+    dimension: Dimension2D;
+    dpi: uint16;
+
+    // https://en.wikipedia.org/wiki/Dublin_Core
+
+    title: StringInfo;
+    description: StringInfo;
+    creator: [StringInfo];
+    contributor: [StringInfo];
+    publisher: [StringInfo];
+    
+    // Rights
+    license: StringInfo;
+    rights: StringInfo;
+    attribution: StringInfo; //cc
+
+    // Time: https://en.wikipedia.org/wiki/ISO_8601
+    created: string;
+    modified: string;
+
+    // Linking
+    related: [Relation];
+ 
+}
+
+table Color {
+    name: StringInfo;
+    colorSpace: StringInfo;
+    value: string;
+}
+
+table Processor {
+    name: StringInfo;
+    version: StringInfo;
+}
+
+table Script {
+    processor: Processor;
+    content: string;
+}
+
+table Effect {
+    before: Script;
+    main: Script;
+    after: Script;
+    related: [Relation];
+}
+
 union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve}
 
 table Shape {
@@ -142,62 +158,49 @@ table Shape {
     effect: [Effect];
 }
 
-struct RawLayerMeta {
+table RawLayerMeta {
     tileDimension: Dimension2D;
     layerDimension: Dimension2D; // usually in tile block
     flags: uint32;
     encoding: StringInfo;
 }
 
-struct RawLayer64 {
+table RawLayer64 {
     meta: RawLayerMeta;
     data: [uint64];
 }
-struct RawLayer32 {
+table RawLayer32 {
     meta: RawLayerMeta;
     data: [uint32];
 }
-struct RawLayer16 {
+table RawLayer16 {
     meta: RawLayerMeta;
     data: [uint16];
 }
-struct RawLayer8 {
+table RawLayer8 {
     meta: RawLayerMeta;
     data: [uint8];
 }
-struct VectorialLayer {
+table VectorialLayer {
     shapes: [Shape];
 }
 
-struct ArrayOfU64 {
-    data: [uint64];
-}
-struct ArrayOfU32 {
-    data: [uint32];
-}
-struct ArrayOfU16 {
-    data: [uint16];
-}
-struct ArrayOfU8 {
-    data: [uint8];
-}
-
-struct Raw2DLayer64 {
+table Raw2DLayer64 {
     meta: RawLayerMeta;
     data: [ArrayOfU64];
 }
 
-struct Raw2DLayer32 {
+table Raw2DLayer32 {
     meta: RawLayerMeta;
     data: [ArrayOfU32];
 }
 
-struct Raw2DLayer16 {
+table Raw2DLayer16 {
     meta: RawLayerMeta;
     data: [ArrayOfU16];
 }
 
-struct Raw2DLayer8 {
+table Raw2DLayer8 {
     meta: RawLayerMeta;
     data: [ArrayOfU8];
 }

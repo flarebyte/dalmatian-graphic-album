@@ -1,3 +1,4 @@
-
+install:
+	brew install flatbuffers
 build-schema:
-	echo 'hello'
+	cd src/lib/schema; flatc --ts dalmatian.fbs

@@ -21,32 +21,37 @@ struct Dimension2D {
     height: uint32;
 }
 
+struct Dimension360 {
+    width: uint32;
+    height: uint32;
+}
+
 struct StringInfo {
     info: string;
     iri: IRI;
+}
+struct Relation {
+    predicate: IRI;
+    resource: IRI;
 }
 
 // https://en.wikipedia.org/wiki/Dublin_Core
 
 table Metadata {
+    identifier: StringInfo;
+    version: StringInfo;
     language: string;
     dimension: Dimension2D;
+    dimension360: Dimension360;
     dpi: uint16;
 
     // https://en.wikipedia.org/wiki/Dublin_Core
 
-    identifier: StringInfo;
     title: StringInfo;
     description: StringInfo;
     creator: [StringInfo];
     contributor: [StringInfo];
     publisher: [StringInfo];
-    subject: [StringInfo];
-    relation: [StringInfo];
-    format: [StringInfo];
-    audience: [StringInfo];
-    spatial: [StringInfo];
-    temporal: [StringInfo];
     
     // Rights
     license: StringInfo;
@@ -58,13 +63,8 @@ table Metadata {
     modified: string;
 
     // Linking
-    isVersionOf: IRI;
-    hasVersion: IRI;
-    hasFormat: [IRI]; // A related resource that is substantially the same but in another format.
-    isPartOf: [IRI];
-    hasPart: [IRI];
-
-
+    related: [Relation];
+ 
 }
 
 table Color {
@@ -77,56 +77,114 @@ struct Tile255x255 {
     rle: [uint32]; // Run length encoding
 }
 
-struct RunLengthEncoding255x255 {
-    tiles: [Tile255x255];
-    dimension: Dimension2D;
-}
-
-struct Compressed255x255 {
-    data: [uint32];
-    dimension: Dimension2D;
-    encoding: StringInfo;
-}
-
 enum: byte Truth {Yes, No}
 
+struct Processor {
+    name: StringInfo;
+    version: StringInfo;
+}
+
+struct Script {
+    processor: Processor;
+    content: string;
+}
+
 struct Effect {
-    processor: StringInfo;
-    script: string;
+    before: Script;
+    main: Script;
+    after: Script;
     optional: Truth;
 }
 
-struct VisualPath {
-
-}
-
 struct MoveTo {
-
+    x: uint32;
+    y: uint32;
+}
+struct LineTo {
+    x: uint32;
+    y: uint32;
 }
 
-struct LineTo {
+struct Horizontal {
+    x: uint32;
+}
 
+struct Vertical {
+    y: uint32;
 }
 
 struct CubicCurve {
+    x1: uint32;
+    y1: uint32;
+    x2: uint32;
+    y2: uint32;
+    x: uint32;
+    y: uint32;
+}
 
+struct SmoothCubicCurve {
+    x2: uint32;
+    y2: uint32;
+    x: uint32;
+    y: uint32;
 }
 
 struct QuadraticCurve {
-
+    x1: uint32;
+    y1: uint32;
+    x: uint32;
+    y: uint32;
 }
 
-struct EllipticalCurve {
-
+struct SmoothQuadraticCurve {
+    x: uint32;
+    y: uint32;
 }
 
-struct ClosePath {
+union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve}
 
+table Shape {
+    identifier: StringInfo;
+    title: StringInfo;
+    description: StringInfo;
+    related: [Relation];    
+    drawing: [Draw];
+    effect: [Effect];
 }
 
-union CurveAction {MoveTo, LineTo, CubicCurve, QuadraticCurve, EllipticalCurve, ClosePath}
 
-union LayerData {RunLengthEncoding255x255, Compressed255x255}
+struct RunLengthEncoding255x255 {
+    dimension: Dimension2D;
+    tiles: [Tile255x255];
+}
+
+struct RawLayerMeta {
+    tileDimension: Dimension2D;
+    layerDimension: Dimension2D; // usually in tile block
+    flags: uint32;
+    encoding: StringInfo;
+}
+
+struct RawLayer64 {
+    meta: RawLayerMeta;
+    data: [uint64];
+}
+struct RawLayer32 {
+    meta: RawLayerMeta;
+    data: [uint32];
+}
+struct RawLayer16 {
+    meta: RawLayerMeta;
+    data: [uint16];
+}
+struct RawLayer8 {
+    meta: RawLayerMeta;
+    data: [uint8];
+}
+struct VectorialLayer {
+    shapes: [Shape];
+}
+union LayerData {VectorialLayer, RawLayer8, RawLayer16, RawLayer32, RawLayer64}
 
 table Layer {
     id: uint32;
@@ -134,9 +192,9 @@ table Layer {
     format: StringInfo;
     color0: [Color]; // each should represent the same color in different color space
     color1: [Color];
-    relation: [StringInfo]; //tags
     description: StringInfo;
     effects: [Effect];
+    related: [Relation]; //tags
 }
 
 
@@ -148,7 +206,7 @@ table MonoColorChunk {
 table Image {
   metadata:Metadata;
   layers: [Layer];
-  effects: [Effect]
+  effecs: [Effect]
 }
 
 root_type Image;

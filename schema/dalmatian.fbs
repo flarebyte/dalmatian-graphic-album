@@ -73,10 +73,6 @@ table Color {
     value: string;
 }
 
-struct Tile255x255 {
-    rle: [uint32]; // Run length encoding
-}
-
 enum: byte Truth {Yes, No}
 
 struct Processor {
@@ -152,12 +148,6 @@ table Shape {
     effect: [Effect];
 }
 
-
-struct RunLengthEncoding255x255 {
-    dimension: Dimension2D;
-    tiles: [Tile255x255];
-}
-
 struct RawLayerMeta {
     tileDimension: Dimension2D;
     layerDimension: Dimension2D; // usually in tile block
@@ -184,7 +174,41 @@ struct RawLayer8 {
 struct VectorialLayer {
     shapes: [Shape];
 }
-union LayerData {VectorialLayer, RawLayer8, RawLayer16, RawLayer32, RawLayer64}
+
+struct ArrayOfU64 {
+    data: [uint64];
+}
+struct ArrayOfU32 {
+    data: [uint32];
+}
+struct ArrayOfU16 {
+    data: [uint16];
+}
+struct ArrayOfU8 {
+    data: [uint8];
+}
+
+struct Raw2DLayer64 {
+    meta: RawLayerMeta;
+    data: [ArrayOfU64];
+}
+
+struct Raw2DLayer32 {
+    meta: RawLayerMeta;
+    data: [ArrayOfU32];
+}
+
+struct Raw2DLayer16 {
+    meta: RawLayerMeta;
+    data: [ArrayOfU16];
+}
+
+struct Raw2DLayer8 {
+    meta: RawLayerMeta;
+    data: [ArrayOfU8];
+}
+
+union LayerData {VectorialLayer, RawLayer8, RawLayer16, RawLayer32, RawLayer64, Raw2DLayer8, Raw2DLayer16, Raw2DLayer32, Raw2DLayer64}
 
 table Layer {
     id: uint32;
@@ -195,12 +219,6 @@ table Layer {
     description: StringInfo;
     effects: [Effect];
     related: [Relation]; //tags
-}
-
-
-table MonoColorChunk {
-    id: uint32;
-    data: RunLengthEncoding255x255;
 }
 
 table Image {

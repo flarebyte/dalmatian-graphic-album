@@ -1,5 +1,6 @@
 namespace Dalmatian;
-file_extension "dln";
+file_identifier "DALN";
+file_extension "daln";
 
 attribute "priority";
 
@@ -72,7 +73,7 @@ table ArrayOfU8 {
 }
 
 table IRIMeta {
-    id:short;
+    id:byte (key);
     prefix: string;
     suffix: string;
     mediaType: string;
@@ -80,12 +81,12 @@ table IRIMeta {
 }
 
 table IRI {
-    locator:string;
-    meta:short;
+    path: string;
+    metaId: byte;
 }
 
-table StringInfo {
-    info: string;
+table Hyperlink {
+    text: string;
     iri: IRI;
 }
 table Relation {
@@ -96,24 +97,24 @@ table Relation {
 // https://en.wikipedia.org/wiki/Dublin_Core
 
 table Metadata {
-    identifier: StringInfo;
-    version: StringInfo;
+    identifier: IRI;
+    version: IRI;
     language: string;
     dimension: Dimension2D;
     dpi: uint16;
 
     // https://en.wikipedia.org/wiki/Dublin_Core
 
-    title: StringInfo;
-    description: StringInfo;
-    creator: [StringInfo];
-    contributor: [StringInfo];
-    publisher: [StringInfo];
+    title: Hyperlink;
+    description: Hyperlink;
+    creator: [Hyperlink];
+    contributor: [Hyperlink];
+    publisher: [Hyperlink];
     
     // Rights
-    license: StringInfo;
-    rights: StringInfo;
-    attribution: StringInfo; //cc
+    license: Hyperlink;
+    rights: Hyperlink;
+    attribution: Hyperlink; //cc
 
     // Time: https://en.wikipedia.org/wiki/ISO_8601
     created: string;
@@ -125,34 +126,38 @@ table Metadata {
 }
 
 table Color {
-    name: StringInfo;
-    colorSpace: StringInfo;
+    id:byte (key);
+    name: Hyperlink;
+    colorSpace: Hyperlink;
     value: string;
 }
 
 table Processor {
-    name: StringInfo;
-    version: StringInfo;
+    id:byte (key);
+    name: Hyperlink; // script language, json
+    version: Hyperlink;
 }
 
 table Script {
-    processor: Processor;
-    content: string;
+    id: uint16 (key);
+    processorId: byte;
+    code: string;
 }
 
 table Effect {
-    before: Script;
-    main: Script;
-    after: Script;
+    id: uint16 (key);
+    beforeScriptId: uint16;
+    mainScriptId: uint16;
+    afterScriptId: uint16;
     related: [Relation];
 }
 
 union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve}
 
 table Shape {
-    identifier: StringInfo;
-    title: StringInfo;
-    description: StringInfo;
+    identifier: IRI;
+    title: Hyperlink;
+    description: Hyperlink;
     related: [Relation];    
     drawing: [Draw];
     effect: [Effect];
@@ -160,9 +165,9 @@ table Shape {
 
 table RawLayerMeta {
     tileDimension: Dimension2D;
-    layerDimension: Dimension2D; // usually in tile block
+    layerDimension: Dimension2D; // usually unit will be tiles
     flags: uint32;
-    encoding: StringInfo;
+    encoding: Hyperlink;
 }
 
 table RawLayer64 {
@@ -208,20 +213,21 @@ table Raw2DLayer8 {
 union LayerData {VectorialLayer, RawLayer8, RawLayer16, RawLayer32, RawLayer64, Raw2DLayer8, Raw2DLayer16, Raw2DLayer32, Raw2DLayer64}
 
 table Layer {
-    id: uint32;
-    data: LayerData;
-    format: StringInfo;
-    color0: [Color]; // each should represent the same color in different color space
-    color1: [Color];
-    description: StringInfo;
+    id: uint16 (key);
+    data: LayerData (required);
+    colorId: [byte]; //usually 2
+    format: Hyperlink;
+    description: Hyperlink;
     effect: [Effect];
     related: [Relation]; //tags
 }
 
 table Publishing {
-    medium: StringInfo; // The material or physical carrier of the resource. ex: Paper, Screen, Storage, 3D glasses
-    format: StringInfo; // The file format, physical medium, or dimensions of the resource. Ex: A4, jpeg
+    id: byte (key);
+    medium: Hyperlink; // The material or physical carrier of the resource. ex: Paper, Screen, Storage, 3D glasses
+    format: Hyperlink; // The file format, physical medium, or dimensions of the resource. Ex: A4, jpeg
     style: [IRI]; // ex: black and white, Manga
+    colorId: [byte];
     dimension: Dimension2D;
     dpi: uint16;
     related: [Relation];
@@ -229,9 +235,13 @@ table Publishing {
 }
 
 table Image {
-  metadata:Metadata;
-  layer: [Layer];
-  publishing: [Publishing];
+  iriSpace: [IRIMeta](required);
+  color: [Color](required);
+  processor: [Processor](required);
+  script: [Script](required);      
+  metadata: Metadata (required);
+  layer: [Layer](required);
+  publishing: [Publishing](required);
 }
 
 root_type Image;

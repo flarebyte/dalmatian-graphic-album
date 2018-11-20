@@ -4,6 +4,7 @@
 
 import {flatbuffers} from 'flatbuffers'
 
+
 /**
  * @enum
  */
@@ -24,7 +25,8 @@ export enum Parameter{
   Uint16Param= 3,
   Uint32Param= 4,
   FloatParam= 5,
-  StringParam= 6
+  StringParam= 6,
+  DimensionParam= 7
 };
 
 /**
@@ -1803,6 +1805,84 @@ static endStringParam(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
+export class DimensionParam {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns DimensionParam
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):DimensionParam {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param DimensionParam= obj
+ * @returns DimensionParam
+ */
+static getRootAsDimensionParam(bb:flatbuffers.ByteBuffer, obj?:DimensionParam):DimensionParam {
+  return (obj || new DimensionParam).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param IRI= obj
+ * @returns IRI|null
+ */
+predicate(obj?:IRI):IRI|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+};
+
+/**
+ * @param Dimension2D= obj
+ * @returns Dimension2D|null
+ */
+value(obj?:Dimension2D):Dimension2D|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? (obj || new Dimension2D).__init(this.bb_pos + offset, this.bb!) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startDimensionParam(builder:flatbuffers.Builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset predicateOffset
+ */
+static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, predicateOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset valueOffset
+ */
+static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
+  builder.addFieldStruct(1, valueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endDimensionParam(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
 export class Metadata {
   bb: flatbuffers.ByteBuffer|null = null;
 
@@ -3061,29 +3141,46 @@ static getRootAsRawLayerMeta(bb:flatbuffers.ByteBuffer, obj?:RawLayerMeta):RawLa
 };
 
 /**
- * @param Dimension2D= obj
- * @returns Dimension2D|null
+ * @param number index
+ * @returns Parameter
  */
-tileDimension(obj?:Dimension2D):Dimension2D|null {
+parameterType(index: number):Parameter|null {
   var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Dimension2D).__init(this.bb_pos + offset, this.bb!) : null;
-};
-
-/**
- * @param Dimension2D= obj
- * @returns Dimension2D|null
- */
-layerDimension(obj?:Dimension2D):Dimension2D|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? (obj || new Dimension2D).__init(this.bb_pos + offset, this.bb!) : null;
+  return offset ? /**  */ (this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)) : /**  */ (0);
 };
 
 /**
  * @returns number
  */
-flags():number {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+parameterTypeLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns Uint8Array
+ */
+parameterTypeArray():Uint8Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param number index
+ * @param flatbuffers.Table= obj
+ * @returns ?flatbuffers.Table
+ */
+parameter<T extends flatbuffers.Table>(index: number, obj:T):T|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__union(obj, this.bb!.__vector(this.bb_pos + offset) + index * 4) : null;
+};
+
+/**
+ * @returns number
+ */
+parameterLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -3091,7 +3188,7 @@ flags():number {
  * @returns Hyperlink|null
  */
 encoding(obj?:Hyperlink):Hyperlink|null {
-  var offset = this.bb!.__offset(this.bb_pos, 10);
+  var offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? (obj || new Hyperlink).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 };
 
@@ -3099,31 +3196,65 @@ encoding(obj?:Hyperlink):Hyperlink|null {
  * @param flatbuffers.Builder builder
  */
 static startRawLayerMeta(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(3);
 };
 
 /**
  * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset tileDimensionOffset
+ * @param flatbuffers.Offset parameterTypeOffset
  */
-static addTileDimension(builder:flatbuffers.Builder, tileDimensionOffset:flatbuffers.Offset) {
-  builder.addFieldStruct(0, tileDimensionOffset, 0);
+static addParameterType(builder:flatbuffers.Builder, parameterTypeOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, parameterTypeOffset, 0);
 };
 
 /**
  * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset layerDimensionOffset
+ * @param Array.<Parameter> data
+ * @returns flatbuffers.Offset
  */
-static addLayerDimension(builder:flatbuffers.Builder, layerDimensionOffset:flatbuffers.Offset) {
-  builder.addFieldStruct(1, layerDimensionOffset, 0);
+static createParameterTypeVector(builder:flatbuffers.Builder, data:Parameter[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]);
+  }
+  return builder.endVector();
 };
 
 /**
  * @param flatbuffers.Builder builder
- * @param number flags
+ * @param number numElems
  */
-static addFlags(builder:flatbuffers.Builder, flags:number) {
-  builder.addFieldInt32(2, flags, 0);
+static startParameterTypeVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset parameterOffset
+ */
+static addParameter(builder:flatbuffers.Builder, parameterOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, parameterOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createParameterVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startParameterVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
 };
 
 /**
@@ -3131,7 +3262,7 @@ static addFlags(builder:flatbuffers.Builder, flags:number) {
  * @param flatbuffers.Offset encodingOffset
  */
 static addEncoding(builder:flatbuffers.Builder, encodingOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, encodingOffset, 0);
+  builder.addFieldOffset(2, encodingOffset, 0);
 };
 
 /**

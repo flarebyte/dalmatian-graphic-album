@@ -126,8 +126,13 @@ table StringParam {
     value: string;
 }
 
+table DimensionParam {
+    predicate: IRI;
+    value: Dimension2D;
+}
 
-union Parameter {IRIParam, Uint8Param, Uint16Param, Uint32Param, FloatParam, StringParam}
+
+union Parameter {IRIParam, Uint8Param, Uint16Param, Uint32Param, FloatParam, StringParam, DimensionParam}
 
 
 // https://en.wikipedia.org/wiki/Dublin_Core
@@ -195,9 +200,7 @@ table Shape {
 }
 
 table RawLayerMeta {
-    tileDimension: Dimension2D;
-    layerDimension: Dimension2D; // usually unit will be tiles
-    flags: uint32;
+    parameter: [Parameter];
     encoding: Hyperlink;
 }
 

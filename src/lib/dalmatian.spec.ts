@@ -7,8 +7,8 @@ import { Color } from './schema/dalmatian_generated';
 test('toArray', t => {
   const data = new Uint8Array();
   const actual = readDalmatianImage(data);
-   const color = actual.color(0);
+   const publishing = actual.publishing(0);
    
-  t.is(color., );
+  t.is(publishing., );
   
 });

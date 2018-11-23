@@ -6,30 +6,50 @@ import {flatbuffers} from 'flatbuffers'
 /**
  * @enum
  */
-export enum Parameter{
+export enum anyUint{
   NONE= 0,
-  IRIParam= 1,
-  Uint8Param= 2,
-  Uint16Param= 3,
-  Uint32Param= 4,
-  FloatParam= 5,
-  StringParam= 6,
-  DimensionParam= 7
+  Uint8= 1,
+  Uint16= 2,
+  Uint32= 3,
+  ArrOfUint8= 4,
+  ArrOfUint16= 5,
+  ArrOfUint32= 6
+};
+
+/**
+ * @enum
+ */
+export enum ObjectValue{
+  NONE= 0,
+  IRI= 1,
+  Localized= 2,
+  Text= 3,
+  Bool= 4,
+  Uint8= 5,
+  Uint16= 6,
+  Uint32= 7,
+  Float= 8,
+  Vector2d= 9,
+  Vector3d= 10,
+  Vector2dFloat= 11,
+  Vector3dFloat= 12,
+  AnyURI= 13,
+  IsoDateTime= 14
 };
 
 /**
  * @constructor
  */
-export class Dimension2D {
+export class Vec2d {
   bb: flatbuffers.ByteBuffer|null = null;
 
   bb_pos:number = 0;
 /**
  * @param number i
  * @param flatbuffers.ByteBuffer bb
- * @returns Dimension2D
+ * @returns Vec2d
  */
-__init(i:number, bb:flatbuffers.ByteBuffer):Dimension2D {
+__init(i:number, bb:flatbuffers.ByteBuffer):Vec2d {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -38,27 +58,27 @@ __init(i:number, bb:flatbuffers.ByteBuffer):Dimension2D {
 /**
  * @returns number
  */
-width():number {
+x():number {
   return this.bb!.readUint32(this.bb_pos);
 };
 
 /**
  * @returns number
  */
-height():number {
+y():number {
   return this.bb!.readUint32(this.bb_pos + 4);
 };
 
 /**
  * @param flatbuffers.Builder builder
- * @param number width
- * @param number height
+ * @param number x
+ * @param number y
  * @returns flatbuffers.Offset
  */
-static createDimension2D(builder:flatbuffers.Builder, width: number, height: number):flatbuffers.Offset {
+static createVec2d(builder:flatbuffers.Builder, x: number, y: number):flatbuffers.Offset {
   builder.prep(4, 8);
-  builder.writeInt32(height);
-  builder.writeInt32(width);
+  builder.writeInt32(y);
+  builder.writeInt32(x);
   return builder.offset();
 };
 
@@ -66,16 +86,172 @@ static createDimension2D(builder:flatbuffers.Builder, width: number, height: num
 /**
  * @constructor
  */
-export class IRIMeta {
+export class Vec2dFloat {
   bb: flatbuffers.ByteBuffer|null = null;
 
   bb_pos:number = 0;
 /**
  * @param number i
  * @param flatbuffers.ByteBuffer bb
- * @returns IRIMeta
+ * @returns Vec2dFloat
  */
-__init(i:number, bb:flatbuffers.ByteBuffer):IRIMeta {
+__init(i:number, bb:flatbuffers.ByteBuffer):Vec2dFloat {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+x():number {
+  return this.bb!.readFloat32(this.bb_pos);
+};
+
+/**
+ * @returns number
+ */
+y():number {
+  return this.bb!.readFloat32(this.bb_pos + 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number x
+ * @param number y
+ * @returns flatbuffers.Offset
+ */
+static createVec2dFloat(builder:flatbuffers.Builder, x: number, y: number):flatbuffers.Offset {
+  builder.prep(4, 8);
+  builder.writeFloat32(y);
+  builder.writeFloat32(x);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Vec3d {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Vec3d
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Vec3d {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+x():number {
+  return this.bb!.readUint32(this.bb_pos);
+};
+
+/**
+ * @returns number
+ */
+y():number {
+  return this.bb!.readUint32(this.bb_pos + 4);
+};
+
+/**
+ * @returns number
+ */
+z():number {
+  return this.bb!.readUint32(this.bb_pos + 8);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number x
+ * @param number y
+ * @param number z
+ * @returns flatbuffers.Offset
+ */
+static createVec3d(builder:flatbuffers.Builder, x: number, y: number, z: number):flatbuffers.Offset {
+  builder.prep(4, 12);
+  builder.writeInt32(z);
+  builder.writeInt32(y);
+  builder.writeInt32(x);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Vec3dFloat {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Vec3dFloat
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Vec3dFloat {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+x():number {
+  return this.bb!.readFloat32(this.bb_pos);
+};
+
+/**
+ * @returns number
+ */
+y():number {
+  return this.bb!.readFloat32(this.bb_pos + 4);
+};
+
+/**
+ * @returns number
+ */
+z():number {
+  return this.bb!.readFloat32(this.bb_pos + 8);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number x
+ * @param number y
+ * @param number z
+ * @returns flatbuffers.Offset
+ */
+static createVec3dFloat(builder:flatbuffers.Builder, x: number, y: number, z: number):flatbuffers.Offset {
+  builder.prep(4, 12);
+  builder.writeFloat32(z);
+  builder.writeFloat32(y);
+  builder.writeFloat32(x);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Curie {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Curie
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Curie {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -83,11 +259,11 @@ __init(i:number, bb:flatbuffers.ByteBuffer):IRIMeta {
 
 /**
  * @param flatbuffers.ByteBuffer bb
- * @param IRIMeta= obj
- * @returns IRIMeta
+ * @param Curie= obj
+ * @returns Curie
  */
-static getRootAsIRIMeta(bb:flatbuffers.ByteBuffer, obj?:IRIMeta):IRIMeta {
-  return (obj || new IRIMeta).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+static getRootAsCurie(bb:flatbuffers.ByteBuffer, obj?:Curie):Curie {
+  return (obj || new Curie).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
@@ -102,43 +278,10 @@ prefix(optionalEncoding?:any):string|Uint8Array|null {
 };
 
 /**
- * @param flatbuffers.Encoding= optionalEncoding
- * @returns string|Uint8Array|null
- */
-suffix():string|null
-suffix(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-suffix(optionalEncoding?:any):string|Uint8Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-};
-
-/**
- * @param flatbuffers.Encoding= optionalEncoding
- * @returns string|Uint8Array|null
- */
-mediaType():string|null
-mediaType(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-mediaType(optionalEncoding?:any):string|Uint8Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-};
-
-/**
- * @param flatbuffers.Encoding= optionalEncoding
- * @returns string|Uint8Array|null
- */
-language():string|null
-language(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-language(optionalEncoding?:any):string|Uint8Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-};
-
-/**
  * @param flatbuffers.Builder builder
  */
-static startIRIMeta(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+static startCurie(builder:flatbuffers.Builder) {
+  builder.startObject(1);
 };
 
 /**
@@ -151,33 +294,9 @@ static addPrefix(builder:flatbuffers.Builder, prefixOffset:flatbuffers.Offset) {
 
 /**
  * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset suffixOffset
- */
-static addSuffix(builder:flatbuffers.Builder, suffixOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, suffixOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset mediaTypeOffset
- */
-static addMediaType(builder:flatbuffers.Builder, mediaTypeOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, mediaTypeOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset languageOffset
- */
-static addLanguage(builder:flatbuffers.Builder, languageOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, languageOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endIRIMeta(builder:flatbuffers.Builder):flatbuffers.Offset {
+static endCurie(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
 };
@@ -211,23 +330,23 @@ static getRootAsIRI(bb:flatbuffers.ByteBuffer, obj?:IRI):IRI {
 };
 
 /**
+ * @param Curie= obj
+ * @returns Curie|null
+ */
+curie(obj?:Curie):Curie|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Curie).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+};
+
+/**
  * @param flatbuffers.Encoding= optionalEncoding
  * @returns string|Uint8Array|null
  */
 path():string|null
 path(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 path(optionalEncoding?:any):string|Uint8Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-};
-
-/**
- * @param IRIMeta= obj
- * @returns IRIMeta|null
- */
-meta(obj?:IRIMeta):IRIMeta|null {
   var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? (obj || new IRIMeta).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
@@ -239,18 +358,18 @@ static startIRI(builder:flatbuffers.Builder) {
 
 /**
  * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset pathOffset
+ * @param flatbuffers.Offset curieOffset
  */
-static addPath(builder:flatbuffers.Builder, pathOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, pathOffset, 0);
+static addCurie(builder:flatbuffers.Builder, curieOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, curieOffset, 0);
 };
 
 /**
  * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset metaOffset
+ * @param flatbuffers.Offset pathOffset
  */
-static addMeta(builder:flatbuffers.Builder, metaOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, metaOffset, 0);
+static addPath(builder:flatbuffers.Builder, pathOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, pathOffset, 0);
 };
 
 /**
@@ -259,6 +378,7 @@ static addMeta(builder:flatbuffers.Builder, metaOffset:flatbuffers.Offset) {
  */
 static endIRI(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
+  builder.requiredField(offset, 6); // path
   return offset;
 };
 
@@ -266,16 +386,16 @@ static endIRI(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class Hyperlink {
+export class Localized {
   bb: flatbuffers.ByteBuffer|null = null;
 
   bb_pos:number = 0;
 /**
  * @param number i
  * @param flatbuffers.ByteBuffer bb
- * @returns Hyperlink
+ * @returns Localized
  */
-__init(i:number, bb:flatbuffers.ByteBuffer):Hyperlink {
+__init(i:number, bb:flatbuffers.ByteBuffer):Localized {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -283,11 +403,11 @@ __init(i:number, bb:flatbuffers.ByteBuffer):Hyperlink {
 
 /**
  * @param flatbuffers.ByteBuffer bb
- * @param Hyperlink= obj
- * @returns Hyperlink
+ * @param Localized= obj
+ * @returns Localized
  */
-static getRootAsHyperlink(bb:flatbuffers.ByteBuffer, obj?:Hyperlink):Hyperlink {
-  return (obj || new Hyperlink).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+static getRootAsLocalized(bb:flatbuffers.ByteBuffer, obj?:Localized):Localized {
+  return (obj || new Localized).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
@@ -302,18 +422,20 @@ text(optionalEncoding?:any):string|Uint8Array|null {
 };
 
 /**
- * @param IRI= obj
- * @returns IRI|null
+ * @param flatbuffers.Encoding= optionalEncoding
+ * @returns string|Uint8Array|null
  */
-iri(obj?:IRI):IRI|null {
+language():string|null
+language(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+language(optionalEncoding?:any):string|Uint8Array|null {
   var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
  * @param flatbuffers.Builder builder
  */
-static startHyperlink(builder:flatbuffers.Builder) {
+static startLocalized(builder:flatbuffers.Builder) {
   builder.startObject(2);
 };
 
@@ -327,17 +449,79 @@ static addText(builder:flatbuffers.Builder, textOffset:flatbuffers.Offset) {
 
 /**
  * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset iriOffset
+ * @param flatbuffers.Offset languageOffset
  */
-static addIri(builder:flatbuffers.Builder, iriOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, iriOffset, 0);
+static addLanguage(builder:flatbuffers.Builder, languageOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, languageOffset, 0);
 };
 
 /**
  * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endHyperlink(builder:flatbuffers.Builder):flatbuffers.Offset {
+static endLocalized(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  builder.requiredField(offset, 4); // text
+  builder.requiredField(offset, 6); // language
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Bool {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Bool
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Bool {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Bool= obj
+ * @returns Bool
+ */
+static getRootAsBool(bb:flatbuffers.ByteBuffer, obj?:Bool):Bool {
+  return (obj || new Bool).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns boolean
+ */
+value():boolean {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startBool(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param boolean value
+ */
+static addValue(builder:flatbuffers.Builder, value:boolean) {
+  builder.addFieldInt8(0, +value, +false);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endBool(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
 };
@@ -346,16 +530,16 @@ static endHyperlink(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class IRIParam {
+export class Uint8 {
   bb: flatbuffers.ByteBuffer|null = null;
 
   bb_pos:number = 0;
 /**
  * @param number i
  * @param flatbuffers.ByteBuffer bb
- * @returns IRIParam
+ * @returns Uint8
  */
-__init(i:number, bb:flatbuffers.ByteBuffer):IRIParam {
+__init(i:number, bb:flatbuffers.ByteBuffer):Uint8 {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -363,98 +547,11 @@ __init(i:number, bb:flatbuffers.ByteBuffer):IRIParam {
 
 /**
  * @param flatbuffers.ByteBuffer bb
- * @param IRIParam= obj
- * @returns IRIParam
+ * @param Uint8= obj
+ * @returns Uint8
  */
-static getRootAsIRIParam(bb:flatbuffers.ByteBuffer, obj?:IRIParam):IRIParam {
-  return (obj || new IRIParam).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param IRI= obj
- * @returns IRI|null
- */
-predicate(obj?:IRI):IRI|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param IRI= obj
- * @returns IRI|null
- */
-resource(obj?:IRI):IRI|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startIRIParam(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset predicateOffset
- */
-static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, predicateOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset resourceOffset
- */
-static addResource(builder:flatbuffers.Builder, resourceOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, resourceOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endIRIParam(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
-export class Uint8Param {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Uint8Param
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Uint8Param {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param Uint8Param= obj
- * @returns Uint8Param
- */
-static getRootAsUint8Param(bb:flatbuffers.ByteBuffer, obj?:Uint8Param):Uint8Param {
-  return (obj || new Uint8Param).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param IRI= obj
- * @returns IRI|null
- */
-predicate(obj?:IRI):IRI|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+static getRootAsUint8(bb:flatbuffers.ByteBuffer, obj?:Uint8):Uint8 {
+  return (obj || new Uint8).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
@@ -462,7 +559,7 @@ predicate(obj?:IRI):IRI|null {
  * @returns number
  */
 value(index: number):number|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
 };
 
@@ -470,7 +567,7 @@ value(index: number):number|null {
  * @returns number
  */
 valueLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -478,23 +575,15 @@ valueLength():number {
  * @returns Uint8Array
  */
 valueArray():Uint8Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 };
 
 /**
  * @param flatbuffers.Builder builder
  */
-static startUint8Param(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset predicateOffset
- */
-static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, predicateOffset, 0);
+static startUint8(builder:flatbuffers.Builder) {
+  builder.startObject(1);
 };
 
 /**
@@ -502,7 +591,7 @@ static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Off
  * @param flatbuffers.Offset valueOffset
  */
 static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, valueOffset, 0);
+  builder.addFieldOffset(0, valueOffset, 0);
 };
 
 /**
@@ -530,7 +619,7 @@ static startValueVector(builder:flatbuffers.Builder, numElems:number) {
  * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endUint8Param(builder:flatbuffers.Builder):flatbuffers.Offset {
+static endUint8(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
 };
@@ -539,16 +628,16 @@ static endUint8Param(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class Uint16Param {
+export class Uint16 {
   bb: flatbuffers.ByteBuffer|null = null;
 
   bb_pos:number = 0;
 /**
  * @param number i
  * @param flatbuffers.ByteBuffer bb
- * @returns Uint16Param
+ * @returns Uint16
  */
-__init(i:number, bb:flatbuffers.ByteBuffer):Uint16Param {
+__init(i:number, bb:flatbuffers.ByteBuffer):Uint16 {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -556,20 +645,11 @@ __init(i:number, bb:flatbuffers.ByteBuffer):Uint16Param {
 
 /**
  * @param flatbuffers.ByteBuffer bb
- * @param Uint16Param= obj
- * @returns Uint16Param
+ * @param Uint16= obj
+ * @returns Uint16
  */
-static getRootAsUint16Param(bb:flatbuffers.ByteBuffer, obj?:Uint16Param):Uint16Param {
-  return (obj || new Uint16Param).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param IRI= obj
- * @returns IRI|null
- */
-predicate(obj?:IRI):IRI|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+static getRootAsUint16(bb:flatbuffers.ByteBuffer, obj?:Uint16):Uint16 {
+  return (obj || new Uint16).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
@@ -577,7 +657,7 @@ predicate(obj?:IRI):IRI|null {
  * @returns number
  */
 value(index: number):number|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readUint16(this.bb!.__vector(this.bb_pos + offset) + index * 2) : 0;
 };
 
@@ -585,7 +665,7 @@ value(index: number):number|null {
  * @returns number
  */
 valueLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -593,23 +673,15 @@ valueLength():number {
  * @returns Uint16Array
  */
 valueArray():Uint16Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? new Uint16Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 };
 
 /**
  * @param flatbuffers.Builder builder
  */
-static startUint16Param(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset predicateOffset
- */
-static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, predicateOffset, 0);
+static startUint16(builder:flatbuffers.Builder) {
+  builder.startObject(1);
 };
 
 /**
@@ -617,7 +689,7 @@ static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Off
  * @param flatbuffers.Offset valueOffset
  */
 static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, valueOffset, 0);
+  builder.addFieldOffset(0, valueOffset, 0);
 };
 
 /**
@@ -645,7 +717,7 @@ static startValueVector(builder:flatbuffers.Builder, numElems:number) {
  * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endUint16Param(builder:flatbuffers.Builder):flatbuffers.Offset {
+static endUint16(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
 };
@@ -654,16 +726,16 @@ static endUint16Param(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class Uint32Param {
+export class Uint32 {
   bb: flatbuffers.ByteBuffer|null = null;
 
   bb_pos:number = 0;
 /**
  * @param number i
  * @param flatbuffers.ByteBuffer bb
- * @returns Uint32Param
+ * @returns Uint32
  */
-__init(i:number, bb:flatbuffers.ByteBuffer):Uint32Param {
+__init(i:number, bb:flatbuffers.ByteBuffer):Uint32 {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -671,20 +743,11 @@ __init(i:number, bb:flatbuffers.ByteBuffer):Uint32Param {
 
 /**
  * @param flatbuffers.ByteBuffer bb
- * @param Uint32Param= obj
- * @returns Uint32Param
+ * @param Uint32= obj
+ * @returns Uint32
  */
-static getRootAsUint32Param(bb:flatbuffers.ByteBuffer, obj?:Uint32Param):Uint32Param {
-  return (obj || new Uint32Param).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param IRI= obj
- * @returns IRI|null
- */
-predicate(obj?:IRI):IRI|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+static getRootAsUint32(bb:flatbuffers.ByteBuffer, obj?:Uint32):Uint32 {
+  return (obj || new Uint32).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
@@ -692,7 +755,7 @@ predicate(obj?:IRI):IRI|null {
  * @returns number
  */
 value(index: number):number|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readUint32(this.bb!.__vector(this.bb_pos + offset) + index * 4) : 0;
 };
 
@@ -700,7 +763,7 @@ value(index: number):number|null {
  * @returns number
  */
 valueLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -708,23 +771,15 @@ valueLength():number {
  * @returns Uint32Array
  */
 valueArray():Uint32Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? new Uint32Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 };
 
 /**
  * @param flatbuffers.Builder builder
  */
-static startUint32Param(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset predicateOffset
- */
-static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, predicateOffset, 0);
+static startUint32(builder:flatbuffers.Builder) {
+  builder.startObject(1);
 };
 
 /**
@@ -732,7 +787,7 @@ static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Off
  * @param flatbuffers.Offset valueOffset
  */
 static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, valueOffset, 0);
+  builder.addFieldOffset(0, valueOffset, 0);
 };
 
 /**
@@ -760,7 +815,7 @@ static startValueVector(builder:flatbuffers.Builder, numElems:number) {
  * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endUint32Param(builder:flatbuffers.Builder):flatbuffers.Offset {
+static endUint32(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
 };
@@ -769,16 +824,16 @@ static endUint32Param(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class FloatParam {
+export class ArrOfUint8 {
   bb: flatbuffers.ByteBuffer|null = null;
 
   bb_pos:number = 0;
 /**
  * @param number i
  * @param flatbuffers.ByteBuffer bb
- * @returns FloatParam
+ * @returns ArrOfUint8
  */
-__init(i:number, bb:flatbuffers.ByteBuffer):FloatParam {
+__init(i:number, bb:flatbuffers.ByteBuffer):ArrOfUint8 {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -786,60 +841,36 @@ __init(i:number, bb:flatbuffers.ByteBuffer):FloatParam {
 
 /**
  * @param flatbuffers.ByteBuffer bb
- * @param FloatParam= obj
- * @returns FloatParam
+ * @param ArrOfUint8= obj
+ * @returns ArrOfUint8
  */
-static getRootAsFloatParam(bb:flatbuffers.ByteBuffer, obj?:FloatParam):FloatParam {
-  return (obj || new FloatParam).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param IRI= obj
- * @returns IRI|null
- */
-predicate(obj?:IRI):IRI|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+static getRootAsArrOfUint8(bb:flatbuffers.ByteBuffer, obj?:ArrOfUint8):ArrOfUint8 {
+  return (obj || new ArrOfUint8).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @param number index
- * @returns number
+ * @param Uint8= obj
+ * @returns Uint8
  */
-value(index: number):number|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readFloat32(this.bb!.__vector(this.bb_pos + offset) + index * 4) : 0;
+value(index: number, obj?:Uint8):Uint8|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Uint8).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 };
 
 /**
  * @returns number
  */
 valueLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
 
 /**
- * @returns Float32Array
- */
-valueArray():Float32Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? new Float32Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
-};
-
-/**
  * @param flatbuffers.Builder builder
  */
-static startFloatParam(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset predicateOffset
- */
-static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, predicateOffset, 0);
+static startArrOfUint8(builder:flatbuffers.Builder) {
+  builder.startObject(1);
 };
 
 /**
@@ -847,7 +878,287 @@ static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Off
  * @param flatbuffers.Offset valueOffset
  */
 static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, valueOffset, 0);
+  builder.addFieldOffset(0, valueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createValueVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startValueVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endArrOfUint8(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class ArrOfUint16 {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns ArrOfUint16
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):ArrOfUint16 {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param ArrOfUint16= obj
+ * @returns ArrOfUint16
+ */
+static getRootAsArrOfUint16(bb:flatbuffers.ByteBuffer, obj?:ArrOfUint16):ArrOfUint16 {
+  return (obj || new ArrOfUint16).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param number index
+ * @param Uint16= obj
+ * @returns Uint16
+ */
+value(index: number, obj?:Uint16):Uint16|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Uint16).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+};
+
+/**
+ * @returns number
+ */
+valueLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startArrOfUint16(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset valueOffset
+ */
+static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, valueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createValueVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startValueVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endArrOfUint16(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class ArrOfUint32 {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns ArrOfUint32
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):ArrOfUint32 {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param ArrOfUint32= obj
+ * @returns ArrOfUint32
+ */
+static getRootAsArrOfUint32(bb:flatbuffers.ByteBuffer, obj?:ArrOfUint32):ArrOfUint32 {
+  return (obj || new ArrOfUint32).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param number index
+ * @param Uint32= obj
+ * @returns Uint32
+ */
+value(index: number, obj?:Uint32):Uint32|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Uint32).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+};
+
+/**
+ * @returns number
+ */
+valueLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startArrOfUint32(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset valueOffset
+ */
+static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, valueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createValueVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startValueVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endArrOfUint32(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Float {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Float
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Float {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Float= obj
+ * @returns Float
+ */
+static getRootAsFloat(bb:flatbuffers.ByteBuffer, obj?:Float):Float {
+  return (obj || new Float).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param number index
+ * @returns number
+ */
+value(index: number):number|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.readFloat32(this.bb!.__vector(this.bb_pos + offset) + index * 4) : 0;
+};
+
+/**
+ * @returns number
+ */
+valueLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns Float32Array
+ */
+valueArray():Float32Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? new Float32Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startFloat(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset valueOffset
+ */
+static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, valueOffset, 0);
 };
 
 /**
@@ -875,8 +1186,9 @@ static startValueVector(builder:flatbuffers.Builder, numElems:number) {
  * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endFloatParam(builder:flatbuffers.Builder):flatbuffers.Offset {
+static endFloat(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
+  builder.requiredField(offset, 4); // value
   return offset;
 };
 
@@ -884,16 +1196,16 @@ static endFloatParam(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class StringParam {
+export class Text {
   bb: flatbuffers.ByteBuffer|null = null;
 
   bb_pos:number = 0;
 /**
  * @param number i
  * @param flatbuffers.ByteBuffer bb
- * @returns StringParam
+ * @returns Text
  */
-__init(i:number, bb:flatbuffers.ByteBuffer):StringParam {
+__init(i:number, bb:flatbuffers.ByteBuffer):Text {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -901,20 +1213,11 @@ __init(i:number, bb:flatbuffers.ByteBuffer):StringParam {
 
 /**
  * @param flatbuffers.ByteBuffer bb
- * @param StringParam= obj
- * @returns StringParam
+ * @param Text= obj
+ * @returns Text
  */
-static getRootAsStringParam(bb:flatbuffers.ByteBuffer, obj?:StringParam):StringParam {
-  return (obj || new StringParam).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param IRI= obj
- * @returns IRI|null
- */
-predicate(obj?:IRI):IRI|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+static getRootAsText(bb:flatbuffers.ByteBuffer, obj?:Text):Text {
+  return (obj || new Text).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
@@ -924,23 +1227,15 @@ predicate(obj?:IRI):IRI|null {
 value():string|null
 value(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 value(optionalEncoding?:any):string|Uint8Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
+  var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
  * @param flatbuffers.Builder builder
  */
-static startStringParam(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset predicateOffset
- */
-static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, predicateOffset, 0);
+static startText(builder:flatbuffers.Builder) {
+  builder.startObject(1);
 };
 
 /**
@@ -948,15 +1243,16 @@ static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Off
  * @param flatbuffers.Offset valueOffset
  */
 static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, valueOffset, 0);
+  builder.addFieldOffset(0, valueOffset, 0);
 };
 
 /**
  * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endStringParam(builder:flatbuffers.Builder):flatbuffers.Offset {
+static endText(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
+  builder.requiredField(offset, 4); // value
   return offset;
 };
 
@@ -964,16 +1260,16 @@ static endStringParam(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class DimensionParam {
+export class AnyURI {
   bb: flatbuffers.ByteBuffer|null = null;
 
   bb_pos:number = 0;
 /**
  * @param number i
  * @param flatbuffers.ByteBuffer bb
- * @returns DimensionParam
+ * @returns AnyURI
  */
-__init(i:number, bb:flatbuffers.ByteBuffer):DimensionParam {
+__init(i:number, bb:flatbuffers.ByteBuffer):AnyURI {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -981,44 +1277,40 @@ __init(i:number, bb:flatbuffers.ByteBuffer):DimensionParam {
 
 /**
  * @param flatbuffers.ByteBuffer bb
- * @param DimensionParam= obj
- * @returns DimensionParam
+ * @param AnyURI= obj
+ * @returns AnyURI
  */
-static getRootAsDimensionParam(bb:flatbuffers.ByteBuffer, obj?:DimensionParam):DimensionParam {
-  return (obj || new DimensionParam).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+static getRootAsAnyURI(bb:flatbuffers.ByteBuffer, obj?:AnyURI):AnyURI {
+  return (obj || new AnyURI).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
- * @param IRI= obj
- * @returns IRI|null
+ * @param flatbuffers.Encoding= optionalEncoding
+ * @returns string|Uint8Array|null
  */
-predicate(obj?:IRI):IRI|null {
+value():string|null
+value(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+value(optionalEncoding?:any):string|Uint8Array|null {
   var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
- * @param Dimension2D= obj
- * @returns Dimension2D|null
+ * @param flatbuffers.Encoding= optionalEncoding
+ * @returns string|Uint8Array|null
  */
-value(obj?:Dimension2D):Dimension2D|null {
+mediaType():string|null
+mediaType(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+mediaType(optionalEncoding?:any):string|Uint8Array|null {
   var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? (obj || new Dimension2D).__init(this.bb_pos + offset, this.bb!) : null;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
  * @param flatbuffers.Builder builder
  */
-static startDimensionParam(builder:flatbuffers.Builder) {
+static startAnyURI(builder:flatbuffers.Builder) {
   builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset predicateOffset
- */
-static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, predicateOffset, 0);
 };
 
 /**
@@ -1026,15 +1318,450 @@ static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Off
  * @param flatbuffers.Offset valueOffset
  */
 static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
-  builder.addFieldStruct(1, valueOffset, 0);
+  builder.addFieldOffset(0, valueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset mediaTypeOffset
+ */
+static addMediaType(builder:flatbuffers.Builder, mediaTypeOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, mediaTypeOffset, 0);
 };
 
 /**
  * @param flatbuffers.Builder builder
  * @returns flatbuffers.Offset
  */
-static endDimensionParam(builder:flatbuffers.Builder):flatbuffers.Offset {
+static endAnyURI(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
+  builder.requiredField(offset, 4); // value
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class IsoDateTime {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns IsoDateTime
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):IsoDateTime {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param IsoDateTime= obj
+ * @returns IsoDateTime
+ */
+static getRootAsIsoDateTime(bb:flatbuffers.ByteBuffer, obj?:IsoDateTime):IsoDateTime {
+  return (obj || new IsoDateTime).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param flatbuffers.Encoding= optionalEncoding
+ * @returns string|Uint8Array|null
+ */
+value():string|null
+value(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+value(optionalEncoding?:any):string|Uint8Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startIsoDateTime(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset valueOffset
+ */
+static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, valueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endIsoDateTime(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  builder.requiredField(offset, 4); // value
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Vector2d {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Vector2d
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Vector2d {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Vector2d= obj
+ * @returns Vector2d
+ */
+static getRootAsVector2d(bb:flatbuffers.ByteBuffer, obj?:Vector2d):Vector2d {
+  return (obj || new Vector2d).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param Vec2d= obj
+ * @returns Vec2d|null
+ */
+value(obj?:Vec2d):Vec2d|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Vec2d).__init(this.bb_pos + offset, this.bb!) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startVector2d(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset valueOffset
+ */
+static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
+  builder.addFieldStruct(0, valueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endVector2d(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  builder.requiredField(offset, 4); // value
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Vector3d {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Vector3d
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Vector3d {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Vector3d= obj
+ * @returns Vector3d
+ */
+static getRootAsVector3d(bb:flatbuffers.ByteBuffer, obj?:Vector3d):Vector3d {
+  return (obj || new Vector3d).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param Vec3d= obj
+ * @returns Vec3d|null
+ */
+value(obj?:Vec3d):Vec3d|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Vec3d).__init(this.bb_pos + offset, this.bb!) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startVector3d(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset valueOffset
+ */
+static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
+  builder.addFieldStruct(0, valueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endVector3d(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  builder.requiredField(offset, 4); // value
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Vector2dFloat {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Vector2dFloat
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Vector2dFloat {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Vector2dFloat= obj
+ * @returns Vector2dFloat
+ */
+static getRootAsVector2dFloat(bb:flatbuffers.ByteBuffer, obj?:Vector2dFloat):Vector2dFloat {
+  return (obj || new Vector2dFloat).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param Vec2dFloat= obj
+ * @returns Vec2dFloat|null
+ */
+value(obj?:Vec2dFloat):Vec2dFloat|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Vec2dFloat).__init(this.bb_pos + offset, this.bb!) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startVector2dFloat(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset valueOffset
+ */
+static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
+  builder.addFieldStruct(0, valueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endVector2dFloat(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  builder.requiredField(offset, 4); // value
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Vector3dFloat {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Vector3dFloat
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Vector3dFloat {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Vector3dFloat= obj
+ * @returns Vector3dFloat
+ */
+static getRootAsVector3dFloat(bb:flatbuffers.ByteBuffer, obj?:Vector3dFloat):Vector3dFloat {
+  return (obj || new Vector3dFloat).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param Vec3dFloat= obj
+ * @returns Vec3dFloat|null
+ */
+value(obj?:Vec3dFloat):Vec3dFloat|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Vec3dFloat).__init(this.bb_pos + offset, this.bb!) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startVector3dFloat(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset valueOffset
+ */
+static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
+  builder.addFieldStruct(0, valueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endVector3dFloat(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  builder.requiredField(offset, 4); // value
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class TripleValue {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns TripleValue
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):TripleValue {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param TripleValue= obj
+ * @returns TripleValue
+ */
+static getRootAsTripleValue(bb:flatbuffers.ByteBuffer, obj?:TripleValue):TripleValue {
+  return (obj || new TripleValue).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param IRI= obj
+ * @returns IRI|null
+ */
+subject(obj?:IRI):IRI|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+};
+
+/**
+ * @param IRI= obj
+ * @returns IRI|null
+ */
+predicate(obj?:IRI):IRI|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? (obj || new IRI).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+};
+
+/**
+ * @returns ObjectValue
+ */
+objectValueType():ObjectValue {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : ObjectValue.NONE;
+};
+
+/**
+ * @param flatbuffers.Table obj
+ * @returns ?flatbuffers.Table
+ */
+objectValue<T extends flatbuffers.Table>(obj:T):T|null {
+  var offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startTripleValue(builder:flatbuffers.Builder) {
+  builder.startObject(4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset subjectOffset
+ */
+static addSubject(builder:flatbuffers.Builder, subjectOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, subjectOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset predicateOffset
+ */
+static addPredicate(builder:flatbuffers.Builder, predicateOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, predicateOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param ObjectValue objectValueType
+ */
+static addObjectValueType(builder:flatbuffers.Builder, objectValueType:ObjectValue) {
+  builder.addFieldInt8(2, objectValueType, ObjectValue.NONE);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset objectValueOffset
+ */
+static addObjectValue(builder:flatbuffers.Builder, objectValueOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, objectValueOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endTripleValue(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  builder.requiredField(offset, 4); // subject
+  builder.requiredField(offset, 6); // predicate
+  builder.requiredField(offset, 10); // objectValue
   return offset;
 };
 

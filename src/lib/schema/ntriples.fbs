@@ -1,60 +1,107 @@
-struct Dimension2D {
-    width: uint32;
-    height: uint32;
+struct Vec2d {
+    x: uint32;
+    y: uint32;
 }
 
-table IRIMeta {
+struct Vec2dFloat {
+    x: float;
+    y: float;
+}
+
+struct Vec3d {
+    x: uint32;
+    y: uint32;
+    z: uint32;
+}
+
+struct Vec3dFloat {
+    x: float;
+    y: float;
+    z: float;
+}
+
+table Curie {
     prefix: string;
-    suffix: string;
-    mediaType: string;
-    language: string;
 }
 
 table IRI {
-    path: string;
-    meta: IRIMeta;
+    curie: Curie;
+    path: string (required);
 }
 
-table Hyperlink {
-    text: string;
-    iri: IRI;
+table Localized {
+    text: string (required);
+    language: string (required);
 }
 
-table IRIParam {
-    predicate: IRI;
-    resource: IRI;
+table Bool {
+    value: bool;
 }
 
-table Uint8Param {
-    predicate: IRI;
+table Uint8 {
     value: [uint8];
 }
 
-table Uint16Param {
-    predicate: IRI;
+table Uint16 {
     value: [uint16];
 }
 
-table Uint32Param {
-    predicate: IRI;
+table Uint32 {
     value: [uint32];
 }
 
-table FloatParam {
-    predicate: IRI;
-    value: [float];
+table ArrOfUint8 {
+    value: [Uint8];
 }
 
-table StringParam {
-    predicate: IRI;
-    value: string;
+table ArrOfUint16 {
+    value: [Uint16];
 }
 
-table DimensionParam {
-    predicate: IRI;
-    value: Dimension2D;
+table ArrOfUint32 {
+    value: [Uint32];
 }
 
+union anyUint { Uint8, Uint16, Uint32, ArrOfUint8, ArrOfUint16, ArrOfUint32 }
 
-union Parameter {IRIParam, Uint8Param, Uint16Param, Uint32Param, FloatParam, StringParam, DimensionParam}
+table Float {
+    value: [float] (required);
+}
+
+table Text {
+    value: string (required);
+}
+
+table AnyURI {
+    value: string (required);
+    mediaType: string;
+}
+
+table IsoDateTime {
+    value: string (required);
+}
+
+table Vector2d {
+    value: Vec2d (required);
+}
+
+table Vector3d {
+    value: Vec3d (required);
+}
+
+table Vector2dFloat {
+    value: Vec2dFloat (required);
+}
+
+table Vector3dFloat {
+    value: Vec3dFloat (required);
+}
+
+union ObjectValue { IRI, Localized, Text, Bool, Uint8, Uint16, Uint32, Float, Vector2d, Vector3d, Vector2dFloat, Vector3dFloat, AnyURI, IsoDateTime}
+
+table TripleValue {
+    subject: IRI (required);
+    predicate: IRI (required);
+    objectValue: ObjectValue (required);
+}
 

@@ -6,140 +6,47 @@ file_extension "daln";
 
 attribute "priority";
 
-// tables
-
-table ArrayOfU32 {
-    data: [uint32];
-}
-table ArrayOfU16 {
-    data: [uint16];
-}
-table ArrayOfU8 {
-    data: [uint8];
-}
-
-// https://en.wikipedia.org/wiki/Dublin_Core
-
-table Metadata {
-    identifier: IRI;
-    version: IRI;
-    language: string;
-
-    // https://en.wikipedia.org/wiki/Dublin_Core
-
-    title: Hyperlink;
-    description: Hyperlink;
-    creator: [Hyperlink];
-    contributor: [Hyperlink];
-    publisher: [Hyperlink];
-    
-    // Rights
-    license: Hyperlink;
-    rights: Hyperlink;
-    attribution: Hyperlink; //cc
-
-    // Time: https://en.wikipedia.org/wiki/ISO_8601
-    created: string;
-    modified: string;
-
-    // Linking
-    related: [IRIParam];
- 
-}
-
-table Color {
-    name: Hyperlink;
-    colorSpace: Hyperlink;
-    value: string;
-}
-
-table Processor {
-    name: Hyperlink; // script language, json
-    version: Hyperlink;
-}
-
 table Script {
-    processor: Processor;
-    code: string;
-    codeUint8: [uint8];
-    require: [Processor];
+    metadata: [TripleValue];
+    bytecode: anyUint;
 }
 
 table Effect {
-    event: IRI;
-    parameter: [Parameter];
+    metadata: [TripleValue];
     script: Script;
 }
 
 table Shape {
-    identifier: IRI;
-    title: Hyperlink;
-    description: Hyperlink;
-    related: [IRIParam];    
+    metadata: [TripleValue];
     drawing: [Draw];
     effect: [Effect];
 }
 
-table RawLayerMeta {
-    parameter: [Parameter];
-    encoding: Hyperlink;
-}
-
-table RawLayer32 {
-    meta: RawLayerMeta;
-    data: [uint32];
-}
-table RawLayer16 {
-    meta: RawLayerMeta;
-    data: [uint16];
-}
-table RawLayer8 {
-    meta: RawLayerMeta;
-    data: [uint8];
-}
 table VectorialLayer {
     shapes: [Shape];
 }
 
-table Raw2DLayer32 {
-    meta: RawLayerMeta;
-    data: [ArrayOfU32];
+table RawLayer {
+    raw: anyUint;
 }
 
-table Raw2DLayer16 {
-    meta: RawLayerMeta;
-    data: [ArrayOfU16];
-}
-
-table Raw2DLayer8 {
-    meta: RawLayerMeta;
-    data: [ArrayOfU8];
-}
-
-union LayerData {VectorialLayer, RawLayer8, RawLayer16, RawLayer32, Raw2DLayer8, Raw2DLayer16, Raw2DLayer32}
+union LayerData { RawLayer, VectorialLayer }
 
 table Layer {
+    metadata: [TripleValue];
     data: LayerData;
-    format: Hyperlink;
-    description: Hyperlink;
     effect: [Effect];
 }
 
 table Publishing {
+    metadata: [TripleValue];
     layer: [Layer];
-    medium: Hyperlink; // The material or physical carrier of the resource. ex: Paper, Screen, Storage, 3D glasses
-    format: Hyperlink; // The file format, physical medium, or dimensions of the resource. Ex: A4, jpeg
-    style: [IRI]; // ex: black and white, Manga
-    color: [Color];
-    dimension: Dimension2D;
-    dpi: uint16;
-    related: [IRIParam];
     effect: [Effect];
 }
 
-table Image {
-  metadata: Metadata;
+table Album {
+  metadata: [TripleValue];
   publishing: [Publishing];
 }
 
-root_type Image;
+root_type Album;

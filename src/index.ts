@@ -1,1 +1,1 @@
-export * from './lib/dalmatian';
+export * from './lib/album';

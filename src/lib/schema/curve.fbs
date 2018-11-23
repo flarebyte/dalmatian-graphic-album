@@ -16,6 +16,7 @@ struct Horizontal {
 struct Vertical {
     y: uint32;
 }
+/** Curve */
 
 struct CubicCurve {
     x1: uint32;

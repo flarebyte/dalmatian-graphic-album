@@ -1,0 +1,52 @@
+/** Album */
+
+table Script {
+    metadata: [TripleValue];
+    bytecode: anyUint;
+}
+
+table Effect {
+    metadata: [TripleValue];
+    script: Script;
+}
+
+table Shape {
+    metadata: [TripleValue];
+    drawing: [Draw];
+    effect: [Effect];
+}
+
+table VectorialLayer {
+    shapes: [Shape];
+}
+
+table RawLayer {
+    raw: anyUint;
+}
+
+union LayerData { RawLayer, VectorialLayer }
+
+table Layer {
+    metadata: [TripleValue];
+    data: LayerData;
+    effect: [Effect];
+}
+
+table Publishing {
+    metadata: [TripleValue];
+    layer: [Layer];
+    effect: [Effect];
+}
+
+table Album {
+  metadata: [TripleValue];
+  publishing: [Publishing];
+}
+
+root_type Album;
+namespace Dalmatian;
+
+file_identifier "DALN";
+file_extension "daln";
+
+attribute "priority";

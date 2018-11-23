@@ -20,6 +20,8 @@ struct Vec3dFloat {
     z: float;
 }
 
+/** RDF n-triples */
+
 table Curie {
     prefix: string;
 }

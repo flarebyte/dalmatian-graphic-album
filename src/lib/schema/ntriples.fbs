@@ -1,0 +1,60 @@
+struct Dimension2D {
+    width: uint32;
+    height: uint32;
+}
+
+table IRIMeta {
+    prefix: string;
+    suffix: string;
+    mediaType: string;
+    language: string;
+}
+
+table IRI {
+    path: string;
+    meta: IRIMeta;
+}
+
+table Hyperlink {
+    text: string;
+    iri: IRI;
+}
+
+table IRIParam {
+    predicate: IRI;
+    resource: IRI;
+}
+
+table Uint8Param {
+    predicate: IRI;
+    value: [uint8];
+}
+
+table Uint16Param {
+    predicate: IRI;
+    value: [uint16];
+}
+
+table Uint32Param {
+    predicate: IRI;
+    value: [uint32];
+}
+
+table FloatParam {
+    predicate: IRI;
+    value: [float];
+}
+
+table StringParam {
+    predicate: IRI;
+    value: string;
+}
+
+table DimensionParam {
+    predicate: IRI;
+    value: Dimension2D;
+}
+
+
+union Parameter {IRIParam, Uint8Param, Uint16Param, Uint32Param, FloatParam, StringParam, DimensionParam}
+

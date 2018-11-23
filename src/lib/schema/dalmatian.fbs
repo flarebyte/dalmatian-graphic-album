@@ -1,71 +1,10 @@
+include "ntriples.fbs";
+include "curve.fbs";
+
 file_identifier "DALN";
 file_extension "daln";
 
 attribute "priority";
-
-// structures
-
-struct Dimension2D {
-    width: uint32;
-    height: uint32;
-}
-
-struct MoveTo {
-    x: uint32;
-    y: uint32;
-}
-
-struct LineTo {
-    x: uint32;
-    y: uint32;
-}
-
-struct Horizontal {
-    x: uint32;
-}
-
-struct Vertical {
-    y: uint32;
-}
-
-struct CubicCurve {
-    x1: uint32;
-    y1: uint32;
-    x2: uint32;
-    y2: uint32;
-    x: uint32;
-    y: uint32;
-}
-
-struct SmoothCubicCurve {
-    x2: uint32;
-    y2: uint32;
-    x: uint32;
-    y: uint32;
-}
-
-struct QuadraticCurve {
-    x1: uint32;
-    y1: uint32;
-    x: uint32;
-    y: uint32;
-}
-
-struct SmoothQuadraticCurve {
-    x: uint32;
-    y: uint32;
-}
-
-enum ArcFlag: byte {LargeArcA, SmallArcA, LargeArcB, SmallArcB}
-
-struct EllipticalArc {
-    rx: uint32;
-    ry: uint32;
-    rotate: float32;
-    arcFlag: ArcFlag;
-    x: uint32;
-    y: uint32;
-}
 
 // tables
 
@@ -78,62 +17,6 @@ table ArrayOfU16 {
 table ArrayOfU8 {
     data: [uint8];
 }
-
-table IRIMeta {
-    prefix: string;
-    suffix: string;
-    mediaType: string;
-    language: string;
-}
-
-table IRI {
-    path: string;
-    meta: IRIMeta;
-}
-
-table Hyperlink {
-    text: string;
-    iri: IRI;
-}
-
-table IRIParam {
-    predicate: IRI;
-    resource: IRI;
-}
-
-table Uint8Param {
-    predicate: IRI;
-    value: [uint8];
-}
-
-table Uint16Param {
-    predicate: IRI;
-    value: [uint16];
-}
-
-table Uint32Param {
-    predicate: IRI;
-    value: [uint32];
-}
-
-table FloatParam {
-    predicate: IRI;
-    value: [float];
-}
-
-table StringParam {
-    predicate: IRI;
-    value: string;
-}
-
-table DimensionParam {
-    predicate: IRI;
-    value: Dimension2D;
-}
-
-
-union Parameter {IRIParam, Uint8Param, Uint16Param, Uint32Param, FloatParam, StringParam, DimensionParam}
-
 
 // https://en.wikipedia.org/wiki/Dublin_Core
 
@@ -187,8 +70,6 @@ table Effect {
     parameter: [Parameter];
     script: Script;
 }
-
-union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve, EllipticalArc}
 
 table Shape {
     identifier: IRI;

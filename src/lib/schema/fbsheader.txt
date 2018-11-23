@@ -1,0 +1,3 @@
+// tslint:disable: member-access member-ordering max-classes-per-file prefer-const no-class variable-name no-expression-statement no-object-mutation no-this readonly-keyword no-var-keyword typedef
+
+import {flatbuffers} from 'flatbuffers'

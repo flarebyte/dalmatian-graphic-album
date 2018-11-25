@@ -108,7 +108,7 @@ table Vector3dFloat {
 }
 
 table VectorColorRGBA {
-    value: [ColorRGBA];
+    value: ColorRGBA (required) ;
 }
 
 union ObjectValue { IRI, Localized, Text, Bool, Uint8, Uint16, Uint32, Float, Vector2d, Vector3d, Vector2dFloat, Vector3dFloat, AnyURI, IsoDateTime, VectorColorRGBA}

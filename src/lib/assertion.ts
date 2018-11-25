@@ -1,4 +1,3 @@
-import { flatbuffers } from 'flatbuffers';
 import {
   AnyURI,
   Assertion,
@@ -93,25 +92,6 @@ const getAsString = (assertion: Assertion | null): string | null => {
   const value = assertion ? assertion.objectValue(noText) : null;
   return value ? value.value() : null;
 };
-
-enum ObjectValue2 {
-  NONE = 0,
-  IRI = 1,
-  Localized = 2,
-  Text = 3,
-  Bool = 4,
-  Uint8 = 5,
-  Uint16 = 6,
-  Uint32 = 7,
-  Float = 8,
-  Vector2d = 9,
-  Vector3d = 10,
-  Vector2dFloat = 11,
-  Vector3dFloat = 12,
-  AnyURI = 13,
-  IsoDateTime = 14,
-  VectorColorRGBA = 15
-}
 
 const noBool = new Bool();
 const getAsBoolean = (assertion: Assertion | null): boolean | null => {
@@ -275,5 +255,6 @@ export {
   getAsVectorXYZ,
   getAsVectorXYFloat,
   getAsVectorXYZFloat,
-  getAsVectorRGBA
+  getAsVectorRGBA,
+  ResourceIdentifier
 };

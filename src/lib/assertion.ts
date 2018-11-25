@@ -1,5 +1,6 @@
 import { flatbuffers } from 'flatbuffers';
-import { Assertion, Bool, Curie, Float, IRI, IsoDateTime, ObjectValue, Text  } from './schema/dalmatian_generated';
+import { AnyURI, Assertion, Bool, Curie, Float, IRI, IsoDateTime, Localized,
+  ObjectValue, Text, Uint16, Uint32, Uint8  } from './schema/dalmatian_generated';
 import { range} from './utils';
 
 // tslint:disable no-if-statement
@@ -7,6 +8,16 @@ import { range} from './utils';
 interface ResourceIdentifier {
   readonly prefix: string;
   readonly path: string;
+}
+
+interface LocalizedText {
+  readonly  language: string;
+  readonly text: string;
+}
+
+interface AnyURIValue {
+  readonly  value: string;
+  readonly  mediaType: string;
 }
 
 const matchString = (expected: string) => (actual: string | null) => {
@@ -65,7 +76,25 @@ const getAsIsoDateTimeString = (assertion: Assertion | null): string | null => {
   return value ? value.value() : null;
 }
 
-const floatOrZero = (value: number | null) => value === null ? 0 : value;
+const noLocalized = new Localized();
+const getAsLocalizedText = (assertion: Assertion | null): LocalizedText | null => {
+  const value = assertion ? assertion.objectValue(noLocalized) : null;
+  const localizedText = value ? value.text(): null;
+  const localizedLanguage = value ? value.language(): null;
+  const language = localizedLanguage === null ? 'en-GB' : localizedLanguage;
+  return localizedText === null ? null : {  language, text: localizedText};
+}
+
+const noAnyURI = new AnyURI();
+const getAsAnyURIValue = (assertion: Assertion | null): AnyURIValue | null => {
+  const value = assertion ? assertion.objectValue(noAnyURI) : null;
+  const valueOrNull = value ? value.value(): null;
+  const mediaTypeOrNull = value ? value.mediaType(): null;
+  const mediaType = mediaTypeOrNull === null ? 'text/html' : mediaTypeOrNull;
+  return valueOrNull === null ? null : {  mediaType, value: valueOrNull};
+}
+
+const numberOrZero = (value: number | null) => value === null ? 0 : value;
 const noFloat = new Float();
 const getAsFloatArray = (assertion: Assertion | null): ReadonlyArray<number> => {
   if (!assertion) { return []; }
@@ -75,10 +104,54 @@ const getAsFloatArray = (assertion: Assertion | null): ReadonlyArray<number> => 
 
   const indexes = range(objValue.valueLength());
 
-  const  getFloatValue = (i: number) => floatOrZero(objValue.value(i))
+  const  getFloatValue = (i: number) => numberOrZero(objValue.value(i))
 
   return indexes.map(getFloatValue);
 }
 
+const noUint8 = new Uint8();
+const getAsUint8Array= (assertion: Assertion | null): Uint8Array => {
+  if (!assertion) { return new Uint8Array([]); }
 
-export { ObjectValue, matchPredicate};
+  const objValue = assertion.objectValue(noUint8);
+  if (!objValue) { return new Uint8Array([]); }
+
+  const indexes = range(objValue.valueLength());
+
+  const  getFloatValue = (i: number) => numberOrZero(objValue.value(i))
+
+  return new Uint8Array(indexes.map(getFloatValue));
+}
+
+const noUint16 = new Uint16();
+const getAsUint16Array= (assertion: Assertion | null): Uint16Array => {
+  if (!assertion) { return new Uint16Array([]); }
+
+  const objValue = assertion.objectValue(noUint16);
+  if (!objValue) { return new Uint16Array([]); }
+
+  const indexes = range(objValue.valueLength());
+
+  const  getFloatValue = (i: number) => numberOrZero(objValue.value(i))
+
+  return new Uint16Array(indexes.map(getFloatValue));
+}
+
+const noUint32 = new Uint32();
+const getAsUint32Array= (assertion: Assertion | null): Uint32Array => {
+  if (!assertion) { return new Uint32Array([]); }
+
+  const objValue = assertion.objectValue(noUint32);
+  if (!objValue) { return new Uint32Array([]); }
+
+  const indexes = range(objValue.valueLength());
+
+  const  getFloatValue = (i: number) => numberOrZero(objValue.value(i))
+
+  return new Uint32Array(indexes.map(getFloatValue));
+}
+
+
+export { ObjectValue, matchPredicate, getAsBoolean, getAsFloatArray,
+   getAsLocalizedText, getAsString, getAsIsoDateTimeString, getAsAnyURIValue,
+    getAsUint8Array, getAsUint16Array, getAsUint32Array};

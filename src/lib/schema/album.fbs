@@ -1,17 +1,17 @@
 /** Album */
 
 table Script {
-    metadata: [TripleValue];
+    metadata: Metadata;
     bytecode: anyUint;
 }
 
 table Effect {
-    metadata: [TripleValue];
+    metadata: Metadata;
     script: Script;
 }
 
 table Shape {
-    metadata: [TripleValue];
+    metadata: Metadata;
     drawing: [Draw];
     effect: [Effect];
 }
@@ -27,19 +27,19 @@ table RawLayer {
 union LayerData { RawLayer, VectorialLayer }
 
 table Layer {
-    metadata: [TripleValue];
+    metadata: Metadata;
     data: LayerData;
     effect: [Effect];
 }
 
 table Publishing {
-    metadata: [TripleValue];
+    metadata: Metadata;
     layer: [Layer];
     effect: [Effect];
 }
 
 table Album {
-  metadata: [TripleValue];
+  metadata: Metadata;
   publishing: [Publishing];
 }
 

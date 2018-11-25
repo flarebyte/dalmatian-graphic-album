@@ -20,6 +20,14 @@ struct Vec3dFloat {
     z: float;
 }
 
+struct ColorRGBA {
+    r: uint16;
+    g: uint16;
+    b: uint16;
+    a: uint16;
+}
+
+
 /** RDF n-triples */
 
 table Curie {
@@ -99,11 +107,19 @@ table Vector3dFloat {
     value: Vec3dFloat (required);
 }
 
-union ObjectValue { IRI, Localized, Text, Bool, Uint8, Uint16, Uint32, Float, Vector2d, Vector3d, Vector2dFloat, Vector3dFloat, AnyURI, IsoDateTime}
+table VectorColorRGBA {
+    value: [ColorRGBA];
+}
 
-table TripleValue {
-    subject: IRI (required);
+union ObjectValue { IRI, Localized, Text, Bool, Uint8, Uint16, Uint32, Float, Vector2d, Vector3d, Vector2dFloat, Vector3dFloat, AnyURI, IsoDateTime, VectorColorRGBA}
+
+table Assertion {
     predicate: IRI (required);
     objectValue: ObjectValue (required);
+}
+
+table Metadata {
+    id: uint32;
+    assertion: [Assertion];
 }
 

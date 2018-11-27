@@ -12,6 +12,8 @@ table Effect {
 
 table Shape {
     metadata: Metadata;
+    entity: Entity;
+    speech: Speech;
     drawing: [Draw];
     effect: [Effect];
 }
@@ -32,14 +34,38 @@ table Layer {
     effect: [Effect];
 }
 
-table Publishing {
+table Panel {
     metadata: Metadata;
     layer: [Layer];
-    effect: [Effect];
+}
+
+table Transition {
+    metadata: Metadata;
+    from: Panel;
+    to: Panel;
+}
+
+table Publishing {
+    metadata: Metadata;
+}
+
+table Entity {
+    metadata: Metadata;
+}
+
+table Speech {
+    metadata: Metadata;
+    speaker: [Entity];
+    audience: [Entity];
 }
 
 table Album {
   metadata: Metadata;
+  layer: [Layer];
+  panel: [Panel];
+  entity: [Entity];
+  speech: [Speech];
+  transition: [Transition];
   publishing: [Publishing];
 }
 

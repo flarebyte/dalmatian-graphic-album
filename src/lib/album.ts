@@ -8,12 +8,8 @@ import {
   Metadata,
   Publishing
 } from './schema/dalmatian_generated';
+import { dctermsFormat } from './term';
 import { range } from './utils';
-
-const dctermsFormat: ResourceIdentifier = {
-  path: 'format',
-  prefix: 'http://purl.org/dc/terms/'
-};
 
 const fromUint8Array = (data: Uint8Array): Album =>
   Album.getRootAsAlbum(new flatbuffers.ByteBuffer(data));

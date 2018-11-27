@@ -1,23 +1,42 @@
 import { flatbuffers } from 'flatbuffers';
-import { Album, IRI, Curie } from './schema/dalmatian_generated';
+import { getAsIRI, ResourceIdentifier } from './assertion';
+import { findAssertions } from './metadata';
+import { getMetadata as getPublishingMeta } from './publishing';
+import {
+  Album,
+  Assertion,
+  Metadata,
+  Publishing
+} from './schema/dalmatian_generated';
+import { range } from './utils';
+
+const dctermsFormat: ResourceIdentifier = {
+  path: 'format',
+  prefix: 'http://purl.org/dc/terms/'
+};
 
 const fromUint8Array = (data: Uint8Array): Album =>
   Album.getRootAsAlbum(new flatbuffers.ByteBuffer(data));
 
-const orEmptyString = (value: string | null ) => value === null ? '' : value;
-const orEmptyCurie = (value: Curie | null ) => value === null ? '' : orEmptyString(value.prefix());
+const getMetadata = (album: Album) => album.metadata();
 
-const iriToString = (iri: IRI | null)  => {
-  return iri === null ? '' : orEmptyCurie(iri.curie()) + orEmptyString(iri.path());
-}
+const findPublishingByFormat = (album: Album) => (
+  format: ResourceIdentifier
+): Publishing | null => {
+  const length = album.publishingLength();
+  const indexes = range(length);
+  const getPublishing = (i: number) => (album ? album.publishing(i) : null);
+  const getMeta = (pub: Publishing | null) => getPublishingMeta(pub);
+  const matchFormatPredicate = (meta: Metadata | null) =>
+    meta ? findAssertions(dctermsFormat)(meta) : null;
+  const matchFormatValue = (assertion: Assertion | null) =>
+    assertion ? format === getAsIRI(assertion) : false;
+  const correctFormat = (pub: Publishing | null) => {
+    const meta = getMeta(pub);
+    const assertions = matchFormatPredicate(meta);
+    return assertions ? assertions.filter(matchFormatValue).length > 0 : false;
+  };
+  return indexes.map(getPublishing).filter(correctFormat)[0];
+};
 
-const getValueAsString = (album: Album, index: number) => (subject: string, predicate: string) {
-  const length = album.metadataLength();
-  const tripleValue = album.metadata(index);
-  const subjectIRI = iriToString(tripleValue.subject());
-  const predicateIRI = tripleValue.predicate();
-  const objectValue = tripleValue.objectValue();
-
- }
-  
-export { Album, fromUint8Array };
+export { Album, fromUint8Array, getMetadata, findPublishingByFormat };

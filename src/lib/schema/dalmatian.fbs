@@ -44,6 +44,19 @@ table Localized {
     language: string (required);
 }
 
+table Text {
+    value: string (required);
+}
+
+table AnyURI {
+    value: string (required);
+    mediaType: string;
+}
+
+table IsoDateTime {
+    value: string (required);
+}
+
 table Bool {
     value: bool;
 }
@@ -60,35 +73,10 @@ table Uint32 {
     value: [uint32];
 }
 
-table ArrOfUint8 {
-    value: [Uint8];
-}
-
-table ArrOfUint16 {
-    value: [Uint16];
-}
-
-table ArrOfUint32 {
-    value: [Uint32];
-}
-
-union anyUint { Uint8, Uint16, Uint32, ArrOfUint8, ArrOfUint16, ArrOfUint32 }
+union anyUint { Uint8, Uint16, Uint32 }
 
 table Float {
     value: [float] (required);
-}
-
-table Text {
-    value: string (required);
-}
-
-table AnyURI {
-    value: string (required);
-    mediaType: string;
-}
-
-table IsoDateTime {
-    value: string (required);
 }
 
 table Vector2d {

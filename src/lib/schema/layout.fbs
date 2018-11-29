@@ -1,0 +1,22 @@
+
+struct Tile {
+    panelId: uint16;
+    x: Fraction;
+    y: Fraction;
+    width: Fraction;
+    height: Fraction;
+}
+
+struct Section {
+}
+
+struct Page {
+}
+
+union LayoutPart { Section, Page, Tile }
+
+table TileLayout {
+    part: [LayoutPart];
+}
+
+union LayoutData { TileLayout }

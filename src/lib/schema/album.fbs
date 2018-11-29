@@ -36,17 +36,17 @@ table Layer {
 
 table Panel {
     metadata: Metadata;
-    layer: [Layer];
+    layerId: [uint16];
 }
 
-table Transition {
+table Layout {
     metadata: Metadata;
-    from: Panel;
-    to: Panel;
+    data: LayoutData;
 }
 
 table Publishing {
     metadata: Metadata;
+    layout: Layout;
 }
 
 table Entity {
@@ -55,8 +55,8 @@ table Entity {
 
 table Speech {
     metadata: Metadata;
-    speaker: [Entity];
-    audience: [Entity];
+    speakerId: [uint16];
+    audienceId: [uint16];
 }
 
 table Album {
@@ -65,7 +65,6 @@ table Album {
   panel: [Panel];
   entity: [Entity];
   speech: [Speech];
-  transition: [Transition];
   publishing: [Publishing];
 }
 

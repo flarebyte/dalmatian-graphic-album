@@ -27,6 +27,10 @@ struct ColorRGBA {
     a: uint16;
 }
 
+struct Fraction {
+    numerator: uint32;
+    denominator: uint32;
+}
 
 /** RDF n-triples */
 
@@ -99,7 +103,11 @@ table VectorColorRGBA {
     value: ColorRGBA (required) ;
 }
 
-union ObjectValue { IRI, Localized, Text, Bool, Uint8, Uint16, Uint32, Float, Vector2d, Vector3d, Vector2dFloat, Vector3dFloat, AnyURI, IsoDateTime, VectorColorRGBA}
+table VectorFraction {
+    value: Fraction (required) ;
+}
+
+union ObjectValue { IRI, Localized, Text, Bool, Uint8, Uint16, Uint32, Float, Vector2d, Vector3d, Vector2dFloat, Vector3dFloat, AnyURI, IsoDateTime, VectorColorRGBA, VectorFraction}
 
 table Assertion {
     predicate: IRI (required);

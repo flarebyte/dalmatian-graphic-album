@@ -1,70 +1,16 @@
 /** Album */
 
-table Script {
-    metadata: Metadata;
-    bytecode: anyUint;
-}
-
-table Effect {
-    metadata: Metadata;
-    script: Script;
-}
-
-table Shape {
-    metadata: Metadata;
-    entity: Entity;
-    speech: Speech;
-    drawing: [Draw];
-    effect: [Effect];
-}
-
-table VectorialLayer {
-    shapes: [Shape];
-}
-
-table RawLayer {
-    raw: anyUint;
-}
-
-union LayerData { RawLayer, VectorialLayer }
-
-table Layer {
-    metadata: Metadata;
-    data: LayerData;
-    effect: [Effect];
-}
-
-table Panel {
-    metadata: Metadata;
-    layerId: [uint16];
-}
-
-table Layout {
-    metadata: Metadata;
-    data: LayoutData;
-}
-
 table Publishing {
     metadata: Metadata;
     layout: Layout;
 }
 
-table Entity {
-    metadata: Metadata;
-}
-
-table Speech {
-    metadata: Metadata;
-    speakerId: [uint16];
-    audienceId: [uint16];
-}
-
 table Album {
   metadata: Metadata;
-  layer: [Layer];
-  panel: [Panel];
   entity: [Entity];
   speech: [Speech];
+  illustration: [Illustration];
+  panel: [Panel];
   publishing: [Publishing];
 }
 

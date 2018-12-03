@@ -20,3 +20,8 @@ table TileLayout {
 }
 
 union LayoutData { TileLayout }
+
+table Layout {
+    metadata: Metadata;
+    data: LayoutData;
+}

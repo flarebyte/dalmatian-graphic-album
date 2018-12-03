@@ -200,73 +200,102 @@ table TileLayout {
     part: [LayoutPart];
 }
 
-union LayoutData { TileLayout }/** Album */
-
-table Script {
-    metadata: Metadata;
-    bytecode: anyUint;
-}
-
-table Effect {
-    metadata: Metadata;
-    script: Script;
-}
-
-table Shape {
-    metadata: Metadata;
-    entity: Entity;
-    speech: Speech;
-    drawing: [Draw];
-    effect: [Effect];
-}
-
-table VectorialLayer {
-    shapes: [Shape];
-}
-
-table RawLayer {
-    raw: anyUint;
-}
-
-union LayerData { RawLayer, VectorialLayer }
-
-table Layer {
-    metadata: Metadata;
-    data: LayerData;
-    effect: [Effect];
-}
-
-table Panel {
-    metadata: Metadata;
-    layerId: [uint16];
-}
+union LayoutData { TileLayout }
 
 table Layout {
     metadata: Metadata;
     data: LayoutData;
 }
+/** Illustrations and Panels */
+
+table Entity {
+    metadata: Metadata;
+}
+
+table Shape {
+    metadata: Metadata;
+    drawing: [Draw];
+    entityId: uint16;
+}
+
+table VectorialIllustration {
+    shapes: [Shape];
+}
+
+table RawIllustration {
+    raw: anyUint;
+}
+
+union IllustrationData { RawIllustration, VectorialIllustration }
+
+table Illustration {
+    metadata: Metadata;
+    data: IllustrationData;
+}
+
+struct Clipping {
+    illustrationId: uint16;
+    x: Fraction;
+    y: Fraction;
+    width: Fraction;
+    height: Fraction;
+}
+
+union Composition { Clipping }
+
+table Panel {
+    metadata: Metadata;
+    composition: [Composition];
+}/** Speech */
+
+struct SpeakingCharacter {
+    entityId: uint16;
+}
+
+struct ThinkingCharacter {
+    entityId: uint16;
+}
+
+struct ScreamingCharacter {
+    entityId: uint16;
+}
+
+struct WhisperingCharacter {
+    entityId: uint16;
+}
+
+struct BroadcastingCharacter {
+    entityId: uint16;
+}
+
+struct ListeningCharacter {
+    entityId: uint16;
+}
+
+struct Narrator {
+    entityId: uint16;
+}
+
+union Interlocutor { SpeakingCharacter, ThinkingCharacter, ScreamingCharacter,  WhisperingCharacter, BroadcastingCharacter, ListeningCharacter, Narrator }
+
+table Speech {
+    metadata: Metadata;
+    interlocutor: [Interlocutor];
+}
+
+/** Album */
 
 table Publishing {
     metadata: Metadata;
     layout: Layout;
 }
 
-table Entity {
-    metadata: Metadata;
-}
-
-table Speech {
-    metadata: Metadata;
-    speakerId: [uint16];
-    audienceId: [uint16];
-}
-
 table Album {
   metadata: Metadata;
-  layer: [Layer];
-  panel: [Panel];
   entity: [Entity];
   speech: [Speech];
+  illustration: [Illustration];
+  panel: [Panel];
   publishing: [Publishing];
 }
 

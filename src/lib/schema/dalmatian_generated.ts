@@ -84,10 +84,32 @@ export enum LayoutData{
 /**
  * @enum
  */
-export enum LayerData{
+export enum IllustrationData{
   NONE= 0,
-  RawLayer= 1,
-  VectorialLayer= 2
+  RawIllustration= 1,
+  VectorialIllustration= 2
+};
+
+/**
+ * @enum
+ */
+export enum Composition{
+  NONE= 0,
+  Clipping= 1
+};
+
+/**
+ * @enum
+ */
+export enum Interlocutor{
+  NONE= 0,
+  SpeakingCharacter= 1,
+  ThinkingCharacter= 2,
+  ScreamingCharacter= 3,
+  WhisperingCharacter= 4,
+  BroadcastingCharacter= 5,
+  ListeningCharacter= 6,
+  Narrator= 7
 };
 
 /**
@@ -2668,845 +2690,6 @@ static endTileLayout(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class Script {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Script
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Script {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param Script= obj
- * @returns Script
- */
-static getRootAsScript(bb:flatbuffers.ByteBuffer, obj?:Script):Script {
-  return (obj || new Script).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param Metadata= obj
- * @returns Metadata|null
- */
-metadata(obj?:Metadata):Metadata|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @returns anyUint
- */
-bytecodeType():anyUint {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : anyUint.NONE;
-};
-
-/**
- * @param flatbuffers.Table obj
- * @returns ?flatbuffers.Table
- */
-bytecode<T extends flatbuffers.Table>(obj:T):T|null {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startScript(builder:flatbuffers.Builder) {
-  builder.startObject(3);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset metadataOffset
- */
-static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, metadataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param anyUint bytecodeType
- */
-static addBytecodeType(builder:flatbuffers.Builder, bytecodeType:anyUint) {
-  builder.addFieldInt8(1, bytecodeType, anyUint.NONE);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset bytecodeOffset
- */
-static addBytecode(builder:flatbuffers.Builder, bytecodeOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, bytecodeOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endScript(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
-export class Effect {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Effect
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Effect {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param Effect= obj
- * @returns Effect
- */
-static getRootAsEffect(bb:flatbuffers.ByteBuffer, obj?:Effect):Effect {
-  return (obj || new Effect).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param Metadata= obj
- * @returns Metadata|null
- */
-metadata(obj?:Metadata):Metadata|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param Script= obj
- * @returns Script|null
- */
-script(obj?:Script):Script|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? (obj || new Script).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startEffect(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset metadataOffset
- */
-static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, metadataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset scriptOffset
- */
-static addScript(builder:flatbuffers.Builder, scriptOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, scriptOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endEffect(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
-export class Shape {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Shape
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Shape {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param Shape= obj
- * @returns Shape
- */
-static getRootAsShape(bb:flatbuffers.ByteBuffer, obj?:Shape):Shape {
-  return (obj || new Shape).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param Metadata= obj
- * @returns Metadata|null
- */
-metadata(obj?:Metadata):Metadata|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param Entity= obj
- * @returns Entity|null
- */
-entity(obj?:Entity):Entity|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? (obj || new Entity).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param Speech= obj
- * @returns Speech|null
- */
-speech(obj?:Speech):Speech|null {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? (obj || new Speech).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param number index
- * @returns Draw
- */
-drawingType(index: number):Draw|null {
-  var offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? /**  */ (this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)) : /**  */ (0);
-};
-
-/**
- * @returns number
- */
-drawingTypeLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns Uint8Array
- */
-drawingTypeArray():Uint8Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
-};
-
-/**
- * @param number index
- * @param flatbuffers.Table= obj
- * @returns ?flatbuffers.Table
- */
-drawing<T extends flatbuffers.Table>(index: number, obj:T):T|null {
-  var offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__union(obj, this.bb!.__vector(this.bb_pos + offset) + index * 4) : null;
-};
-
-/**
- * @returns number
- */
-drawingLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param number index
- * @param Effect= obj
- * @returns Effect
- */
-effect(index: number, obj?:Effect):Effect|null {
-  var offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? (obj || new Effect).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-};
-
-/**
- * @returns number
- */
-effectLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startShape(builder:flatbuffers.Builder) {
-  builder.startObject(6);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset metadataOffset
- */
-static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, metadataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset entityOffset
- */
-static addEntity(builder:flatbuffers.Builder, entityOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, entityOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset speechOffset
- */
-static addSpeech(builder:flatbuffers.Builder, speechOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, speechOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset drawingTypeOffset
- */
-static addDrawingType(builder:flatbuffers.Builder, drawingTypeOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, drawingTypeOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<Draw> data
- * @returns flatbuffers.Offset
- */
-static createDrawingTypeVector(builder:flatbuffers.Builder, data:Draw[]):flatbuffers.Offset {
-  builder.startVector(1, data.length, 1);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addInt8(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startDrawingTypeVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(1, numElems, 1);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset drawingOffset
- */
-static addDrawing(builder:flatbuffers.Builder, drawingOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, drawingOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<flatbuffers.Offset> data
- * @returns flatbuffers.Offset
- */
-static createDrawingVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startDrawingVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset effectOffset
- */
-static addEffect(builder:flatbuffers.Builder, effectOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, effectOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<flatbuffers.Offset> data
- * @returns flatbuffers.Offset
- */
-static createEffectVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startEffectVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endShape(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
-export class VectorialLayer {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns VectorialLayer
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):VectorialLayer {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param VectorialLayer= obj
- * @returns VectorialLayer
- */
-static getRootAsVectorialLayer(bb:flatbuffers.ByteBuffer, obj?:VectorialLayer):VectorialLayer {
-  return (obj || new VectorialLayer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param number index
- * @param Shape= obj
- * @returns Shape
- */
-shapes(index: number, obj?:Shape):Shape|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Shape).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-};
-
-/**
- * @returns number
- */
-shapesLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startVectorialLayer(builder:flatbuffers.Builder) {
-  builder.startObject(1);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset shapesOffset
- */
-static addShapes(builder:flatbuffers.Builder, shapesOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, shapesOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<flatbuffers.Offset> data
- * @returns flatbuffers.Offset
- */
-static createShapesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startShapesVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endVectorialLayer(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
-export class RawLayer {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns RawLayer
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):RawLayer {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param RawLayer= obj
- * @returns RawLayer
- */
-static getRootAsRawLayer(bb:flatbuffers.ByteBuffer, obj?:RawLayer):RawLayer {
-  return (obj || new RawLayer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @returns anyUint
- */
-rawType():anyUint {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : anyUint.NONE;
-};
-
-/**
- * @param flatbuffers.Table obj
- * @returns ?flatbuffers.Table
- */
-raw<T extends flatbuffers.Table>(obj:T):T|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startRawLayer(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param anyUint rawType
- */
-static addRawType(builder:flatbuffers.Builder, rawType:anyUint) {
-  builder.addFieldInt8(0, rawType, anyUint.NONE);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset rawOffset
- */
-static addRaw(builder:flatbuffers.Builder, rawOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, rawOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endRawLayer(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
-export class Layer {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Layer
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Layer {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param Layer= obj
- * @returns Layer
- */
-static getRootAsLayer(bb:flatbuffers.ByteBuffer, obj?:Layer):Layer {
-  return (obj || new Layer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param Metadata= obj
- * @returns Metadata|null
- */
-metadata(obj?:Metadata):Metadata|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @returns LayerData
- */
-dataType():LayerData {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : LayerData.NONE;
-};
-
-/**
- * @param flatbuffers.Table obj
- * @returns ?flatbuffers.Table
- */
-data<T extends flatbuffers.Table>(obj:T):T|null {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
-};
-
-/**
- * @param number index
- * @param Effect= obj
- * @returns Effect
- */
-effect(index: number, obj?:Effect):Effect|null {
-  var offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? (obj || new Effect).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-};
-
-/**
- * @returns number
- */
-effectLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startLayer(builder:flatbuffers.Builder) {
-  builder.startObject(4);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset metadataOffset
- */
-static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, metadataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param LayerData dataType
- */
-static addDataType(builder:flatbuffers.Builder, dataType:LayerData) {
-  builder.addFieldInt8(1, dataType, LayerData.NONE);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset dataOffset
- */
-static addData(builder:flatbuffers.Builder, dataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, dataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset effectOffset
- */
-static addEffect(builder:flatbuffers.Builder, effectOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, effectOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<flatbuffers.Offset> data
- * @returns flatbuffers.Offset
- */
-static createEffectVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startEffectVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endLayer(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
-export class Panel {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Panel
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Panel {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param Panel= obj
- * @returns Panel
- */
-static getRootAsPanel(bb:flatbuffers.ByteBuffer, obj?:Panel):Panel {
-  return (obj || new Panel).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param Metadata= obj
- * @returns Metadata|null
- */
-metadata(obj?:Metadata):Metadata|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param number index
- * @returns number
- */
-layerId(index: number):number|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readUint16(this.bb!.__vector(this.bb_pos + offset) + index * 2) : 0;
-};
-
-/**
- * @returns number
- */
-layerIdLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns Uint16Array
- */
-layerIdArray():Uint16Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? new Uint16Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startPanel(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset metadataOffset
- */
-static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, metadataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset layerIdOffset
- */
-static addLayerId(builder:flatbuffers.Builder, layerIdOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, layerIdOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<number> data
- * @returns flatbuffers.Offset
- */
-static createLayerIdVector(builder:flatbuffers.Builder, data:number[] | Uint8Array):flatbuffers.Offset {
-  builder.startVector(2, data.length, 2);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addInt16(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startLayerIdVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(2, numElems, 2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endPanel(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
 export class Layout {
   bb: flatbuffers.ByteBuffer|null = null;
 
@@ -3601,6 +2784,1180 @@ static endLayout(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
+export class Entity {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Entity
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Entity {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Entity= obj
+ * @returns Entity
+ */
+static getRootAsEntity(bb:flatbuffers.ByteBuffer, obj?:Entity):Entity {
+  return (obj || new Entity).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param Metadata= obj
+ * @returns Metadata|null
+ */
+metadata(obj?:Metadata):Metadata|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startEntity(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset metadataOffset
+ */
+static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, metadataOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endEntity(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Shape {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Shape
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Shape {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Shape= obj
+ * @returns Shape
+ */
+static getRootAsShape(bb:flatbuffers.ByteBuffer, obj?:Shape):Shape {
+  return (obj || new Shape).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param Metadata= obj
+ * @returns Metadata|null
+ */
+metadata(obj?:Metadata):Metadata|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+};
+
+/**
+ * @param number index
+ * @returns Draw
+ */
+drawingType(index: number):Draw|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? /**  */ (this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)) : /**  */ (0);
+};
+
+/**
+ * @returns number
+ */
+drawingTypeLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns Uint8Array
+ */
+drawingTypeArray():Uint8Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param number index
+ * @param flatbuffers.Table= obj
+ * @returns ?flatbuffers.Table
+ */
+drawing<T extends flatbuffers.Table>(index: number, obj:T):T|null {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__union(obj, this.bb!.__vector(this.bb_pos + offset) + index * 4) : null;
+};
+
+/**
+ * @returns number
+ */
+drawingLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns number
+ */
+entityId():number {
+  var offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startShape(builder:flatbuffers.Builder) {
+  builder.startObject(4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset metadataOffset
+ */
+static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, metadataOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset drawingTypeOffset
+ */
+static addDrawingType(builder:flatbuffers.Builder, drawingTypeOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, drawingTypeOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<Draw> data
+ * @returns flatbuffers.Offset
+ */
+static createDrawingTypeVector(builder:flatbuffers.Builder, data:Draw[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startDrawingTypeVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset drawingOffset
+ */
+static addDrawing(builder:flatbuffers.Builder, drawingOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, drawingOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createDrawingVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startDrawingVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number entityId
+ */
+static addEntityId(builder:flatbuffers.Builder, entityId:number) {
+  builder.addFieldInt16(3, entityId, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endShape(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class VectorialIllustration {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns VectorialIllustration
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):VectorialIllustration {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param VectorialIllustration= obj
+ * @returns VectorialIllustration
+ */
+static getRootAsVectorialIllustration(bb:flatbuffers.ByteBuffer, obj?:VectorialIllustration):VectorialIllustration {
+  return (obj || new VectorialIllustration).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param number index
+ * @param Shape= obj
+ * @returns Shape
+ */
+shapes(index: number, obj?:Shape):Shape|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Shape).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+};
+
+/**
+ * @returns number
+ */
+shapesLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startVectorialIllustration(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset shapesOffset
+ */
+static addShapes(builder:flatbuffers.Builder, shapesOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, shapesOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createShapesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startShapesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endVectorialIllustration(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class RawIllustration {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns RawIllustration
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):RawIllustration {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param RawIllustration= obj
+ * @returns RawIllustration
+ */
+static getRootAsRawIllustration(bb:flatbuffers.ByteBuffer, obj?:RawIllustration):RawIllustration {
+  return (obj || new RawIllustration).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns anyUint
+ */
+rawType():anyUint {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : anyUint.NONE;
+};
+
+/**
+ * @param flatbuffers.Table obj
+ * @returns ?flatbuffers.Table
+ */
+raw<T extends flatbuffers.Table>(obj:T):T|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startRawIllustration(builder:flatbuffers.Builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param anyUint rawType
+ */
+static addRawType(builder:flatbuffers.Builder, rawType:anyUint) {
+  builder.addFieldInt8(0, rawType, anyUint.NONE);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset rawOffset
+ */
+static addRaw(builder:flatbuffers.Builder, rawOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, rawOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endRawIllustration(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Illustration {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Illustration
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Illustration {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Illustration= obj
+ * @returns Illustration
+ */
+static getRootAsIllustration(bb:flatbuffers.ByteBuffer, obj?:Illustration):Illustration {
+  return (obj || new Illustration).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param Metadata= obj
+ * @returns Metadata|null
+ */
+metadata(obj?:Metadata):Metadata|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+};
+
+/**
+ * @returns IllustrationData
+ */
+dataType():IllustrationData {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : IllustrationData.NONE;
+};
+
+/**
+ * @param flatbuffers.Table obj
+ * @returns ?flatbuffers.Table
+ */
+data<T extends flatbuffers.Table>(obj:T):T|null {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startIllustration(builder:flatbuffers.Builder) {
+  builder.startObject(3);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset metadataOffset
+ */
+static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, metadataOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param IllustrationData dataType
+ */
+static addDataType(builder:flatbuffers.Builder, dataType:IllustrationData) {
+  builder.addFieldInt8(1, dataType, IllustrationData.NONE);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset dataOffset
+ */
+static addData(builder:flatbuffers.Builder, dataOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, dataOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endIllustration(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Clipping {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Clipping
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Clipping {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+illustrationId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param Fraction= obj
+ * @returns Fraction|null
+ */
+x(obj?:Fraction):Fraction|null {
+  return (obj || new Fraction).__init(this.bb_pos + 4, this.bb!);
+};
+
+/**
+ * @param Fraction= obj
+ * @returns Fraction|null
+ */
+y(obj?:Fraction):Fraction|null {
+  return (obj || new Fraction).__init(this.bb_pos + 12, this.bb!);
+};
+
+/**
+ * @param Fraction= obj
+ * @returns Fraction|null
+ */
+width(obj?:Fraction):Fraction|null {
+  return (obj || new Fraction).__init(this.bb_pos + 20, this.bb!);
+};
+
+/**
+ * @param Fraction= obj
+ * @returns Fraction|null
+ */
+height(obj?:Fraction):Fraction|null {
+  return (obj || new Fraction).__init(this.bb_pos + 28, this.bb!);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number illustrationId
+ * @param number x_numerator
+ * @param number x_denominator
+ * @param number y_numerator
+ * @param number y_denominator
+ * @param number width_numerator
+ * @param number width_denominator
+ * @param number height_numerator
+ * @param number height_denominator
+ * @returns flatbuffers.Offset
+ */
+static createClipping(builder:flatbuffers.Builder, illustrationId: number, x_numerator: number, x_denominator: number, y_numerator: number, y_denominator: number, width_numerator: number, width_denominator: number, height_numerator: number, height_denominator: number):flatbuffers.Offset {
+  builder.prep(4, 36);
+  builder.prep(4, 8);
+  builder.writeInt32(height_denominator);
+  builder.writeInt32(height_numerator);
+  builder.prep(4, 8);
+  builder.writeInt32(width_denominator);
+  builder.writeInt32(width_numerator);
+  builder.prep(4, 8);
+  builder.writeInt32(y_denominator);
+  builder.writeInt32(y_numerator);
+  builder.prep(4, 8);
+  builder.writeInt32(x_denominator);
+  builder.writeInt32(x_numerator);
+  builder.pad(2);
+  builder.writeInt16(illustrationId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Panel {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Panel
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Panel {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Panel= obj
+ * @returns Panel
+ */
+static getRootAsPanel(bb:flatbuffers.ByteBuffer, obj?:Panel):Panel {
+  return (obj || new Panel).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param Metadata= obj
+ * @returns Metadata|null
+ */
+metadata(obj?:Metadata):Metadata|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+};
+
+/**
+ * @param number index
+ * @returns Composition
+ */
+compositionType(index: number):Composition|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? /**  */ (this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)) : /**  */ (0);
+};
+
+/**
+ * @returns number
+ */
+compositionTypeLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns Uint8Array
+ */
+compositionTypeArray():Uint8Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param number index
+ * @param flatbuffers.Table= obj
+ * @returns ?flatbuffers.Table
+ */
+composition<T extends flatbuffers.Table>(index: number, obj:T):T|null {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__union(obj, this.bb!.__vector(this.bb_pos + offset) + index * 4) : null;
+};
+
+/**
+ * @returns number
+ */
+compositionLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startPanel(builder:flatbuffers.Builder) {
+  builder.startObject(3);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset metadataOffset
+ */
+static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, metadataOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset compositionTypeOffset
+ */
+static addCompositionType(builder:flatbuffers.Builder, compositionTypeOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, compositionTypeOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<Composition> data
+ * @returns flatbuffers.Offset
+ */
+static createCompositionTypeVector(builder:flatbuffers.Builder, data:Composition[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startCompositionTypeVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset compositionOffset
+ */
+static addComposition(builder:flatbuffers.Builder, compositionOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, compositionOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createCompositionVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startCompositionVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endPanel(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class SpeakingCharacter {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns SpeakingCharacter
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):SpeakingCharacter {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+entityId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number entityId
+ * @returns flatbuffers.Offset
+ */
+static createSpeakingCharacter(builder:flatbuffers.Builder, entityId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(entityId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class ThinkingCharacter {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns ThinkingCharacter
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):ThinkingCharacter {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+entityId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number entityId
+ * @returns flatbuffers.Offset
+ */
+static createThinkingCharacter(builder:flatbuffers.Builder, entityId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(entityId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class ScreamingCharacter {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns ScreamingCharacter
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):ScreamingCharacter {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+entityId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number entityId
+ * @returns flatbuffers.Offset
+ */
+static createScreamingCharacter(builder:flatbuffers.Builder, entityId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(entityId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class WhisperingCharacter {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns WhisperingCharacter
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):WhisperingCharacter {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+entityId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number entityId
+ * @returns flatbuffers.Offset
+ */
+static createWhisperingCharacter(builder:flatbuffers.Builder, entityId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(entityId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class BroadcastingCharacter {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns BroadcastingCharacter
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):BroadcastingCharacter {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+entityId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number entityId
+ * @returns flatbuffers.Offset
+ */
+static createBroadcastingCharacter(builder:flatbuffers.Builder, entityId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(entityId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class ListeningCharacter {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns ListeningCharacter
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):ListeningCharacter {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+entityId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number entityId
+ * @returns flatbuffers.Offset
+ */
+static createListeningCharacter(builder:flatbuffers.Builder, entityId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(entityId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Narrator {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Narrator
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Narrator {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+entityId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number entityId
+ * @returns flatbuffers.Offset
+ */
+static createNarrator(builder:flatbuffers.Builder, entityId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(entityId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Speech {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Speech
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Speech {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Speech= obj
+ * @returns Speech
+ */
+static getRootAsSpeech(bb:flatbuffers.ByteBuffer, obj?:Speech):Speech {
+  return (obj || new Speech).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param Metadata= obj
+ * @returns Metadata|null
+ */
+metadata(obj?:Metadata):Metadata|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+};
+
+/**
+ * @param number index
+ * @returns Interlocutor
+ */
+interlocutorType(index: number):Interlocutor|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? /**  */ (this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)) : /**  */ (0);
+};
+
+/**
+ * @returns number
+ */
+interlocutorTypeLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns Uint8Array
+ */
+interlocutorTypeArray():Uint8Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param number index
+ * @param flatbuffers.Table= obj
+ * @returns ?flatbuffers.Table
+ */
+interlocutor<T extends flatbuffers.Table>(index: number, obj:T):T|null {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__union(obj, this.bb!.__vector(this.bb_pos + offset) + index * 4) : null;
+};
+
+/**
+ * @returns number
+ */
+interlocutorLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startSpeech(builder:flatbuffers.Builder) {
+  builder.startObject(3);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset metadataOffset
+ */
+static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, metadataOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset interlocutorTypeOffset
+ */
+static addInterlocutorType(builder:flatbuffers.Builder, interlocutorTypeOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, interlocutorTypeOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<Interlocutor> data
+ * @returns flatbuffers.Offset
+ */
+static createInterlocutorTypeVector(builder:flatbuffers.Builder, data:Interlocutor[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startInterlocutorTypeVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset interlocutorOffset
+ */
+static addInterlocutor(builder:flatbuffers.Builder, interlocutorOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, interlocutorOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createInterlocutorVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startInterlocutorVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endSpeech(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
 export class Publishing {
   bb: flatbuffers.ByteBuffer|null = null;
 
@@ -3679,236 +4036,6 @@ static endPublishing(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class Entity {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Entity
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Entity {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param Entity= obj
- * @returns Entity
- */
-static getRootAsEntity(bb:flatbuffers.ByteBuffer, obj?:Entity):Entity {
-  return (obj || new Entity).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param Metadata= obj
- * @returns Metadata|null
- */
-metadata(obj?:Metadata):Metadata|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startEntity(builder:flatbuffers.Builder) {
-  builder.startObject(1);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset metadataOffset
- */
-static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, metadataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endEntity(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
-export class Speech {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Speech
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Speech {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param Speech= obj
- * @returns Speech
- */
-static getRootAsSpeech(bb:flatbuffers.ByteBuffer, obj?:Speech):Speech {
-  return (obj || new Speech).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param Metadata= obj
- * @returns Metadata|null
- */
-metadata(obj?:Metadata):Metadata|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param number index
- * @returns number
- */
-speakerId(index: number):number|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readUint16(this.bb!.__vector(this.bb_pos + offset) + index * 2) : 0;
-};
-
-/**
- * @returns number
- */
-speakerIdLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns Uint16Array
- */
-speakerIdArray():Uint16Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? new Uint16Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
-};
-
-/**
- * @param number index
- * @returns number
- */
-audienceId(index: number):number|null {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readUint16(this.bb!.__vector(this.bb_pos + offset) + index * 2) : 0;
-};
-
-/**
- * @returns number
- */
-audienceIdLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns Uint16Array
- */
-audienceIdArray():Uint16Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? new Uint16Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startSpeech(builder:flatbuffers.Builder) {
-  builder.startObject(3);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset metadataOffset
- */
-static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, metadataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset speakerIdOffset
- */
-static addSpeakerId(builder:flatbuffers.Builder, speakerIdOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, speakerIdOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<number> data
- * @returns flatbuffers.Offset
- */
-static createSpeakerIdVector(builder:flatbuffers.Builder, data:number[] | Uint8Array):flatbuffers.Offset {
-  builder.startVector(2, data.length, 2);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addInt16(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startSpeakerIdVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(2, numElems, 2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset audienceIdOffset
- */
-static addAudienceId(builder:flatbuffers.Builder, audienceIdOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, audienceIdOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<number> data
- * @returns flatbuffers.Offset
- */
-static createAudienceIdVector(builder:flatbuffers.Builder, data:number[] | Uint8Array):flatbuffers.Offset {
-  builder.startVector(2, data.length, 2);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addInt16(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startAudienceIdVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(2, numElems, 2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endSpeech(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
 export class Album {
   bb: flatbuffers.ByteBuffer|null = null;
 
@@ -3952,47 +4079,11 @@ metadata(obj?:Metadata):Metadata|null {
 
 /**
  * @param number index
- * @param Layer= obj
- * @returns Layer
- */
-layer(index: number, obj?:Layer):Layer|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? (obj || new Layer).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-};
-
-/**
- * @returns number
- */
-layerLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param number index
- * @param Panel= obj
- * @returns Panel
- */
-panel(index: number, obj?:Panel):Panel|null {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? (obj || new Panel).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-};
-
-/**
- * @returns number
- */
-panelLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param number index
  * @param Entity= obj
  * @returns Entity
  */
 entity(index: number, obj?:Entity):Entity|null {
-  var offset = this.bb!.__offset(this.bb_pos, 10);
+  var offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? (obj || new Entity).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 };
 
@@ -4000,7 +4091,7 @@ entity(index: number, obj?:Entity):Entity|null {
  * @returns number
  */
 entityLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 10);
+  var offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -4010,7 +4101,7 @@ entityLength():number {
  * @returns Speech
  */
 speech(index: number, obj?:Speech):Speech|null {
-  var offset = this.bb!.__offset(this.bb_pos, 12);
+  var offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? (obj || new Speech).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 };
 
@@ -4018,6 +4109,42 @@ speech(index: number, obj?:Speech):Speech|null {
  * @returns number
  */
 speechLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param number index
+ * @param Illustration= obj
+ * @returns Illustration
+ */
+illustration(index: number, obj?:Illustration):Illustration|null {
+  var offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? (obj || new Illustration).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+};
+
+/**
+ * @returns number
+ */
+illustrationLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param number index
+ * @param Panel= obj
+ * @returns Panel
+ */
+panel(index: number, obj?:Panel):Panel|null {
+  var offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? (obj || new Panel).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+};
+
+/**
+ * @returns number
+ */
+panelLength():number {
   var offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -4057,68 +4184,10 @@ static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offse
 
 /**
  * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset layerOffset
- */
-static addLayer(builder:flatbuffers.Builder, layerOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, layerOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<flatbuffers.Offset> data
- * @returns flatbuffers.Offset
- */
-static createLayerVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startLayerVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset panelOffset
- */
-static addPanel(builder:flatbuffers.Builder, panelOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, panelOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<flatbuffers.Offset> data
- * @returns flatbuffers.Offset
- */
-static createPanelVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startPanelVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-};
-
-/**
- * @param flatbuffers.Builder builder
  * @param flatbuffers.Offset entityOffset
  */
 static addEntity(builder:flatbuffers.Builder, entityOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, entityOffset, 0);
+  builder.addFieldOffset(1, entityOffset, 0);
 };
 
 /**
@@ -4147,7 +4216,7 @@ static startEntityVector(builder:flatbuffers.Builder, numElems:number) {
  * @param flatbuffers.Offset speechOffset
  */
 static addSpeech(builder:flatbuffers.Builder, speechOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, speechOffset, 0);
+  builder.addFieldOffset(2, speechOffset, 0);
 };
 
 /**
@@ -4168,6 +4237,64 @@ static createSpeechVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]
  * @param number numElems
  */
 static startSpeechVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset illustrationOffset
+ */
+static addIllustration(builder:flatbuffers.Builder, illustrationOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, illustrationOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createIllustrationVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startIllustrationVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset panelOffset
+ */
+static addPanel(builder:flatbuffers.Builder, panelOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, panelOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createPanelVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startPanelVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 };
 

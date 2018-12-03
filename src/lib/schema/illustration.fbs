@@ -1,0 +1,41 @@
+/** Illustrations and Panels */
+
+table Entity {
+    metadata: Metadata;
+}
+
+table Shape {
+    metadata: Metadata;
+    drawing: [Draw];
+    entityId: uint16;
+}
+
+table VectorialIllustration {
+    shapes: [Shape];
+}
+
+table RawIllustration {
+    raw: anyUint;
+}
+
+union IllustrationData { RawIllustration, VectorialIllustration }
+
+table Illustration {
+    metadata: Metadata;
+    data: IllustrationData;
+}
+
+struct Clipping {
+    illustrationId: uint16;
+    x: Fraction;
+    y: Fraction;
+    width: Fraction;
+    height: Fraction;
+}
+
+union Composition { Clipping }
+
+table Panel {
+    metadata: Metadata;
+    composition: [Composition];
+}

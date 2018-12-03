@@ -1,0 +1,37 @@
+/** Speech */
+
+struct SpeakingCharacter {
+    entityId: uint16;
+}
+
+struct ThinkingCharacter {
+    entityId: uint16;
+}
+
+struct ScreamingCharacter {
+    entityId: uint16;
+}
+
+struct WhisperingCharacter {
+    entityId: uint16;
+}
+
+struct BroadcastingCharacter {
+    entityId: uint16;
+}
+
+struct ListeningCharacter {
+    entityId: uint16;
+}
+
+struct Narrator {
+    entityId: uint16;
+}
+
+union Interlocutor { SpeakingCharacter, ThinkingCharacter, ScreamingCharacter,  WhisperingCharacter, BroadcastingCharacter, ListeningCharacter, Narrator }
+
+table Speech {
+    metadata: Metadata;
+    interlocutor: [Interlocutor];
+}
+

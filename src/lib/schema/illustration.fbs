@@ -4,15 +4,20 @@ table Entity {
     metadata: Metadata;
 }
 
-table Shape {
+table Style {
     metadata: Metadata;
-    drawing: [Draw];
-    entityId: uint16;
 }
 
 table Illustration {
     metadata: Metadata;
     data: anyUint;
+}
+
+table Shape {
+    metadata: Metadata;
+    drawing: [Draw];
+    entityId: uint16;
+    illustrationId: uint16;
 }
 
 struct Clipping {
@@ -28,4 +33,16 @@ union Composition { Clipping }
 table Panel {
     metadata: Metadata;
     composition: [Composition];
+}
+
+struct PanelId {
+    panelId: uint16;
+}
+
+struct StyleId {
+    styleId: uint16;
+}
+
+struct IllustrationId {
+    illustrationId: uint16;
 }

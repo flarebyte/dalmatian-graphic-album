@@ -1,27 +1,20 @@
-
-struct Tile {
-    panelId: uint16;
-    x: Fraction;
-    y: Fraction;
-    width: Fraction;
-    height: Fraction;
-}
-
 struct Section {
+    supplementId: unit16;
 }
 
 struct Page {
+    supplementId: unit16;
 }
 
-union LayoutPart { Section, Page, Tile }
+struct Tile {
+    supplementId: unit16;
+}
+
+union TileInstruction { Section, Page, Tile, PanelId , Vec2dFraction, Dim2dFraction, StyleId, IllustrationId}
 
 table TileLayout {
-    part: [LayoutPart];
+    sequence: [TileInstruction];
 }
 
-union LayoutData { TileLayout }
+union Layout { TileLayout }
 
-table Layout {
-    metadata: Metadata;
-    data: LayoutData;
-}

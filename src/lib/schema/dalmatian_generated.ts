@@ -95,7 +95,7 @@ export enum LayoutPart{
 /**
  * @enum
  */
-export enum LayoutData{
+export enum Layout{
   NONE= 0,
   TileLayout= 1
 };
@@ -2756,100 +2756,6 @@ static endTileLayout(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class Layout {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Layout
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Layout {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param Layout= obj
- * @returns Layout
- */
-static getRootAsLayout(bb:flatbuffers.ByteBuffer, obj?:Layout):Layout {
-  return (obj || new Layout).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param Metadata= obj
- * @returns Metadata|null
- */
-metadata(obj?:Metadata):Metadata|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @returns LayoutData
- */
-dataType():LayoutData {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : LayoutData.NONE;
-};
-
-/**
- * @param flatbuffers.Table obj
- * @returns ?flatbuffers.Table
- */
-data<T extends flatbuffers.Table>(obj:T):T|null {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startLayout(builder:flatbuffers.Builder) {
-  builder.startObject(3);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset metadataOffset
- */
-static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, metadataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param LayoutData dataType
- */
-static addDataType(builder:flatbuffers.Builder, dataType:LayoutData) {
-  builder.addFieldInt8(1, dataType, LayoutData.NONE);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset dataOffset
- */
-static addData(builder:flatbuffers.Builder, dataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, dataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endLayout(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
 export class Entity {
   bb: flatbuffers.ByteBuffer|null = null;
 
@@ -2903,184 +2809,6 @@ static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offse
  * @returns flatbuffers.Offset
  */
 static endEntity(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
-export class Shape {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Shape
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Shape {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param Shape= obj
- * @returns Shape
- */
-static getRootAsShape(bb:flatbuffers.ByteBuffer, obj?:Shape):Shape {
-  return (obj || new Shape).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param Metadata= obj
- * @returns Metadata|null
- */
-metadata(obj?:Metadata):Metadata|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-};
-
-/**
- * @param number index
- * @returns Draw
- */
-drawingType(index: number):Draw|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? /**  */ (this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)) : /**  */ (0);
-};
-
-/**
- * @returns number
- */
-drawingTypeLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns Uint8Array
- */
-drawingTypeArray():Uint8Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
-};
-
-/**
- * @param number index
- * @param flatbuffers.Table= obj
- * @returns ?flatbuffers.Table
- */
-drawing<T extends flatbuffers.Table>(index: number, obj:T):T|null {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__union(obj, this.bb!.__vector(this.bb_pos + offset) + index * 4) : null;
-};
-
-/**
- * @returns number
- */
-drawingLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns number
- */
-entityId():number {
-  var offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startShape(builder:flatbuffers.Builder) {
-  builder.startObject(4);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset metadataOffset
- */
-static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, metadataOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset drawingTypeOffset
- */
-static addDrawingType(builder:flatbuffers.Builder, drawingTypeOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, drawingTypeOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<Draw> data
- * @returns flatbuffers.Offset
- */
-static createDrawingTypeVector(builder:flatbuffers.Builder, data:Draw[]):flatbuffers.Offset {
-  builder.startVector(1, data.length, 1);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addInt8(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startDrawingTypeVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(1, numElems, 1);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset drawingOffset
- */
-static addDrawing(builder:flatbuffers.Builder, drawingOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, drawingOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<flatbuffers.Offset> data
- * @returns flatbuffers.Offset
- */
-static createDrawingVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startDrawingVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number entityId
- */
-static addEntityId(builder:flatbuffers.Builder, entityId:number) {
-  builder.addFieldInt16(3, entityId, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endShape(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
 };
@@ -3175,6 +2903,200 @@ static addData(builder:flatbuffers.Builder, dataOffset:flatbuffers.Offset) {
  * @returns flatbuffers.Offset
  */
 static endIllustration(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Shape {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Shape
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Shape {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param Shape= obj
+ * @returns Shape
+ */
+static getRootAsShape(bb:flatbuffers.ByteBuffer, obj?:Shape):Shape {
+  return (obj || new Shape).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param Metadata= obj
+ * @returns Metadata|null
+ */
+metadata(obj?:Metadata):Metadata|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? (obj || new Metadata).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+};
+
+/**
+ * @param number index
+ * @returns Draw
+ */
+drawingType(index: number):Draw|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? /**  */ (this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)) : /**  */ (0);
+};
+
+/**
+ * @returns number
+ */
+drawingTypeLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns Uint8Array
+ */
+drawingTypeArray():Uint8Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param number index
+ * @param flatbuffers.Table= obj
+ * @returns ?flatbuffers.Table
+ */
+drawing<T extends flatbuffers.Table>(index: number, obj:T):T|null {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__union(obj, this.bb!.__vector(this.bb_pos + offset) + index * 4) : null;
+};
+
+/**
+ * @returns number
+ */
+drawingLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns number
+ */
+entityId():number {
+  var offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns number
+ */
+illustrationId():number {
+  var offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startShape(builder:flatbuffers.Builder) {
+  builder.startObject(5);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset metadataOffset
+ */
+static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, metadataOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset drawingTypeOffset
+ */
+static addDrawingType(builder:flatbuffers.Builder, drawingTypeOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, drawingTypeOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<Draw> data
+ * @returns flatbuffers.Offset
+ */
+static createDrawingTypeVector(builder:flatbuffers.Builder, data:Draw[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startDrawingTypeVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset drawingOffset
+ */
+static addDrawing(builder:flatbuffers.Builder, drawingOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, drawingOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createDrawingVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startDrawingVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number entityId
+ */
+static addEntityId(builder:flatbuffers.Builder, entityId:number) {
+  builder.addFieldInt16(3, entityId, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number illustrationId
+ */
+static addIllustrationId(builder:flatbuffers.Builder, illustrationId:number) {
+  builder.addFieldInt16(4, illustrationId, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endShape(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
 };
@@ -3890,19 +3812,27 @@ metadata(obj?:Metadata):Metadata|null {
 };
 
 /**
- * @param Layout= obj
- * @returns Layout|null
+ * @returns Layout
  */
-layout(obj?:Layout):Layout|null {
+layoutType():Layout {
   var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? (obj || new Layout).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : Layout.NONE;
+};
+
+/**
+ * @param flatbuffers.Table obj
+ * @returns ?flatbuffers.Table
+ */
+layout<T extends flatbuffers.Table>(obj:T):T|null {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
 };
 
 /**
  * @param flatbuffers.Builder builder
  */
 static startPublishing(builder:flatbuffers.Builder) {
-  builder.startObject(2);
+  builder.startObject(3);
 };
 
 /**
@@ -3915,10 +3845,18 @@ static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offse
 
 /**
  * @param flatbuffers.Builder builder
+ * @param Layout layoutType
+ */
+static addLayoutType(builder:flatbuffers.Builder, layoutType:Layout) {
+  builder.addFieldInt8(1, layoutType, Layout.NONE);
+};
+
+/**
+ * @param flatbuffers.Builder builder
  * @param flatbuffers.Offset layoutOffset
  */
 static addLayout(builder:flatbuffers.Builder, layoutOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, layoutOffset, 0);
+  builder.addFieldOffset(2, layoutOffset, 0);
 };
 
 /**

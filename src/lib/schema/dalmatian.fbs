@@ -32,6 +32,16 @@ struct Fraction {
     denominator: uint32;
 }
 
+struct Vec2dFraction {
+    x: Fraction;
+    y: Fraction;
+}
+
+struct Dim2dFraction {
+    width: Fraction;
+    height: Fraction;
+}
+
 /** RDF n-triples */
 
 table Curie {
@@ -186,48 +196,46 @@ struct EllipticalArc {
 }
 
 union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve, EllipticalArc, Point}
-
-struct Tile {
-    panelId: uint16;
-    x: Fraction;
-    y: Fraction;
-    width: Fraction;
-    height: Fraction;
-}
-
 struct Section {
+    supplementId: unit16;
 }
 
 struct Page {
+    supplementId: unit16;
 }
 
-union LayoutPart { Section, Page, Tile }
+struct Tile {
+    supplementId: unit16;
+}
+
+union TileInstruction { Section, Page, Tile, PanelId , Vec2dFraction, Dim2dFraction, StyleId, IllustrationId}
 
 table TileLayout {
-    part: [LayoutPart];
+    sequence: [TileInstruction];
 }
 
-union LayoutData { TileLayout }
+union Layout { TileLayout }
 
-table Layout {
-    metadata: Metadata;
-    data: LayoutData;
-}
 /** Illustrations and Panels */
 
 table Entity {
     metadata: Metadata;
 }
 
-table Shape {
+table Style {
     metadata: Metadata;
-    drawing: [Draw];
-    entityId: uint16;
 }
 
 table Illustration {
     metadata: Metadata;
     data: anyUint;
+}
+
+table Shape {
+    metadata: Metadata;
+    drawing: [Draw];
+    entityId: uint16;
+    illustrationId: uint16;
 }
 
 struct Clipping {
@@ -243,6 +251,18 @@ union Composition { Clipping }
 table Panel {
     metadata: Metadata;
     composition: [Composition];
+}
+
+struct PanelId {
+    panelId: uint16;
+}
+
+struct StyleId {
+    styleId: uint16;
+}
+
+struct IllustrationId {
+    illustrationId: uint16;
 }/** Speech */
 
 struct SpeakingCharacter {
@@ -289,10 +309,12 @@ table Publishing {
 
 table Album {
   metadata: Metadata;
+  supplement: [Metadata];
   entity: [Entity];
   speech: [Speech];
   illustration: [Illustration];
   shape: [Shape];
+  style: [Style];
   panel: [Panel];
   publishing: [Publishing];
 }

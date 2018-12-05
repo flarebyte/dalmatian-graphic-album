@@ -32,6 +32,16 @@ struct Fraction {
     denominator: uint32;
 }
 
+struct Vec2dFraction {
+    x: Fraction;
+    y: Fraction;
+}
+
+struct Dim2dFraction {
+    width: Fraction;
+    height: Fraction;
+}
+
 /** RDF n-triples */
 
 table Curie {

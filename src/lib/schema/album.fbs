@@ -7,10 +7,12 @@ table Publishing {
 
 table Album {
   metadata: Metadata;
+  supplement: [Metadata];
   entity: [Entity];
   speech: [Speech];
   illustration: [Illustration];
   shape: [Shape];
+  style: [Style];
   panel: [Panel];
   publishing: [Publishing];
 }

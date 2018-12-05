@@ -10,19 +10,9 @@ table Shape {
     entityId: uint16;
 }
 
-table VectorialIllustration {
-    shapes: [Shape];
-}
-
-table RawIllustration {
-    raw: anyUint;
-}
-
-union IllustrationData { RawIllustration, VectorialIllustration }
-
 table Illustration {
     metadata: Metadata;
-    data: IllustrationData;
+    data: anyUint;
 }
 
 struct Clipping {

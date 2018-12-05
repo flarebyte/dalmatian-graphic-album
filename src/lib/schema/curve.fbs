@@ -1,3 +1,10 @@
+enum QuickName: byte { Alpha, Beta, Gamma, Delta, Epsilon, Zeta, Eta, Theta, Iota, Kappa, Lambda, Mu } 
+
+struct Point {
+    x: uint32;
+    y: uint32; 
+    name: QuickName;
+}
 
 struct MoveTo {
     x: uint32;
@@ -57,4 +64,4 @@ struct EllipticalArc {
     y: uint32;
 }
 
-union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve, EllipticalArc}
+union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve, EllipticalArc, Point}

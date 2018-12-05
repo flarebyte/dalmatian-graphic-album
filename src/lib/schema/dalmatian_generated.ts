@@ -40,6 +40,24 @@ export enum ObjectValue{
 /**
  * @enum
  */
+export enum QuickName{
+  Alpha= 0,
+  Beta= 1,
+  Gamma= 2,
+  Delta= 3,
+  Epsilon= 4,
+  Zeta= 5,
+  Eta= 6,
+  Theta= 7,
+  Iota= 8,
+  Kappa= 9,
+  Lambda= 10,
+  Mu= 11
+};
+
+/**
+ * @enum
+ */
 export enum ArcFlag{
   LargeArcA= 0,
   SmallArcA= 1,
@@ -60,7 +78,8 @@ export enum Draw{
   SmoothCubicCurve= 6,
   QuadraticCurve= 7,
   SmoothQuadraticCurve= 8,
-  EllipticalArc= 9
+  EllipticalArc= 9,
+  Point= 10
 };
 
 /**
@@ -79,15 +98,6 @@ export enum LayoutPart{
 export enum LayoutData{
   NONE= 0,
   TileLayout= 1
-};
-
-/**
- * @enum
- */
-export enum IllustrationData{
-  NONE= 0,
-  RawIllustration= 1,
-  VectorialIllustration= 2
 };
 
 /**
@@ -1894,6 +1904,62 @@ static endMetadata(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
+export class Point {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Point
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Point {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+x():number {
+  return this.bb!.readUint32(this.bb_pos);
+};
+
+/**
+ * @returns number
+ */
+y():number {
+  return this.bb!.readUint32(this.bb_pos + 4);
+};
+
+/**
+ * @returns QuickName
+ */
+name():QuickName {
+  return /**  */ (this.bb!.readInt8(this.bb_pos + 8));
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number x
+ * @param number y
+ * @param QuickName name
+ * @returns flatbuffers.Offset
+ */
+static createPoint(builder:flatbuffers.Builder, x: number, y: number, name: QuickName):flatbuffers.Offset {
+  builder.prep(4, 12);
+  builder.pad(3);
+  builder.writeInt8(name);
+  builder.writeInt32(y);
+  builder.writeInt32(x);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
 export class MoveTo {
   bb: flatbuffers.ByteBuffer|null = null;
 
@@ -3023,174 +3089,6 @@ static endShape(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class VectorialIllustration {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns VectorialIllustration
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):VectorialIllustration {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param VectorialIllustration= obj
- * @returns VectorialIllustration
- */
-static getRootAsVectorialIllustration(bb:flatbuffers.ByteBuffer, obj?:VectorialIllustration):VectorialIllustration {
-  return (obj || new VectorialIllustration).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param number index
- * @param Shape= obj
- * @returns Shape
- */
-shapes(index: number, obj?:Shape):Shape|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? (obj || new Shape).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-};
-
-/**
- * @returns number
- */
-shapesLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startVectorialIllustration(builder:flatbuffers.Builder) {
-  builder.startObject(1);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset shapesOffset
- */
-static addShapes(builder:flatbuffers.Builder, shapesOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, shapesOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<flatbuffers.Offset> data
- * @returns flatbuffers.Offset
- */
-static createShapesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startShapesVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endVectorialIllustration(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
-export class RawIllustration {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns RawIllustration
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):RawIllustration {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param RawIllustration= obj
- * @returns RawIllustration
- */
-static getRootAsRawIllustration(bb:flatbuffers.ByteBuffer, obj?:RawIllustration):RawIllustration {
-  return (obj || new RawIllustration).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @returns anyUint
- */
-rawType():anyUint {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : anyUint.NONE;
-};
-
-/**
- * @param flatbuffers.Table obj
- * @returns ?flatbuffers.Table
- */
-raw<T extends flatbuffers.Table>(obj:T):T|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startRawIllustration(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param anyUint rawType
- */
-static addRawType(builder:flatbuffers.Builder, rawType:anyUint) {
-  builder.addFieldInt8(0, rawType, anyUint.NONE);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset rawOffset
- */
-static addRaw(builder:flatbuffers.Builder, rawOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, rawOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endRawIllustration(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
 export class Illustration {
   bb: flatbuffers.ByteBuffer|null = null;
 
@@ -3225,11 +3123,11 @@ metadata(obj?:Metadata):Metadata|null {
 };
 
 /**
- * @returns IllustrationData
+ * @returns anyUint
  */
-dataType():IllustrationData {
+dataType():anyUint {
   var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : IllustrationData.NONE;
+  return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : anyUint.NONE;
 };
 
 /**
@@ -3258,10 +3156,10 @@ static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offse
 
 /**
  * @param flatbuffers.Builder builder
- * @param IllustrationData dataType
+ * @param anyUint dataType
  */
-static addDataType(builder:flatbuffers.Builder, dataType:IllustrationData) {
-  builder.addFieldInt8(1, dataType, IllustrationData.NONE);
+static addDataType(builder:flatbuffers.Builder, dataType:anyUint) {
+  builder.addFieldInt8(1, dataType, anyUint.NONE);
 };
 
 /**
@@ -4133,11 +4031,29 @@ illustrationLength():number {
 
 /**
  * @param number index
+ * @param Shape= obj
+ * @returns Shape
+ */
+shape(index: number, obj?:Shape):Shape|null {
+  var offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? (obj || new Shape).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+};
+
+/**
+ * @returns number
+ */
+shapeLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param number index
  * @param Panel= obj
  * @returns Panel
  */
 panel(index: number, obj?:Panel):Panel|null {
-  var offset = this.bb!.__offset(this.bb_pos, 12);
+  var offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? (obj || new Panel).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 };
 
@@ -4145,7 +4061,7 @@ panel(index: number, obj?:Panel):Panel|null {
  * @returns number
  */
 panelLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 12);
+  var offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -4155,7 +4071,7 @@ panelLength():number {
  * @returns Publishing
  */
 publishing(index: number, obj?:Publishing):Publishing|null {
-  var offset = this.bb!.__offset(this.bb_pos, 14);
+  var offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? (obj || new Publishing).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 };
 
@@ -4163,7 +4079,7 @@ publishing(index: number, obj?:Publishing):Publishing|null {
  * @returns number
  */
 publishingLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 14);
+  var offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -4171,7 +4087,7 @@ publishingLength():number {
  * @param flatbuffers.Builder builder
  */
 static startAlbum(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 };
 
 /**
@@ -4271,10 +4187,39 @@ static startIllustrationVector(builder:flatbuffers.Builder, numElems:number) {
 
 /**
  * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset shapeOffset
+ */
+static addShape(builder:flatbuffers.Builder, shapeOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, shapeOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createShapeVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startShapeVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
  * @param flatbuffers.Offset panelOffset
  */
 static addPanel(builder:flatbuffers.Builder, panelOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, panelOffset, 0);
+  builder.addFieldOffset(5, panelOffset, 0);
 };
 
 /**
@@ -4303,7 +4248,7 @@ static startPanelVector(builder:flatbuffers.Builder, numElems:number) {
  * @param flatbuffers.Offset publishingOffset
  */
 static addPublishing(builder:flatbuffers.Builder, publishingOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, publishingOffset, 0);
+  builder.addFieldOffset(6, publishingOffset, 0);
 };
 
 /**

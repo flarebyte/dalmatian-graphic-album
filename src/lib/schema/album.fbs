@@ -10,6 +10,7 @@ table Album {
   entity: [Entity];
   speech: [Speech];
   illustration: [Illustration];
+  shape: [Shape];
   panel: [Panel];
   publishing: [Publishing];
 }

@@ -119,6 +119,13 @@ table Metadata {
     assertion: [Assertion];
 }
 
+enum QuickName: byte { Alpha, Beta, Gamma, Delta, Epsilon, Zeta, Eta, Theta, Iota, Kappa, Lambda, Mu } 
+
+struct Point {
+    x: uint32;
+    y: uint32; 
+    name: QuickName;
+}
 
 struct MoveTo {
     x: uint32;
@@ -178,7 +185,7 @@ struct EllipticalArc {
     y: uint32;
 }
 
-union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve, EllipticalArc}
+union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve, EllipticalArc, Point}
 
 struct Tile {
     panelId: uint16;
@@ -218,19 +225,9 @@ table Shape {
     entityId: uint16;
 }
 
-table VectorialIllustration {
-    shapes: [Shape];
-}
-
-table RawIllustration {
-    raw: anyUint;
-}
-
-union IllustrationData { RawIllustration, VectorialIllustration }
-
 table Illustration {
     metadata: Metadata;
-    data: IllustrationData;
+    data: anyUint;
 }
 
 struct Clipping {
@@ -295,6 +292,7 @@ table Album {
   entity: [Entity];
   speech: [Speech];
   illustration: [Illustration];
+  shape: [Shape];
   panel: [Panel];
   publishing: [Publishing];
 }

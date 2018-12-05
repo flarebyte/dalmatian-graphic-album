@@ -197,18 +197,18 @@ struct EllipticalArc {
 
 union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve, EllipticalArc, Point}
 struct Section {
-    supplementId: unit16;
+    supplementId: uint16;
 }
 
 struct Page {
-    supplementId: unit16;
+    supplementId: uint16;
 }
 
 struct Tile {
-    supplementId: unit16;
+    supplementId: uint16;
 }
 
-union TileInstruction { Section, Page, Tile, PanelId , Vec2dFraction, Dim2dFraction, StyleId, IllustrationId}
+union TileInstruction { Section, Page, Tile, Vec2dFraction, Dim2dFraction, StencilId, StyleId }
 
 table TileLayout {
     sequence: [TileInstruction];
@@ -246,14 +246,7 @@ struct Clipping {
     height: Fraction;
 }
 
-union Composition { Clipping }
-
-table Panel {
-    metadata: Metadata;
-    composition: [Composition];
-}
-
-struct PanelId {
+struct StencilId {
     panelId: uint16;
 }
 
@@ -263,6 +256,13 @@ struct StyleId {
 
 struct IllustrationId {
     illustrationId: uint16;
+}
+
+union Composition { IllustrationId , StyleId, Vec2dFraction, Dim2dFraction }
+
+table Stencil {
+    metadata: Metadata;
+    composition: [Composition];
 }/** Speech */
 
 struct SpeakingCharacter {
@@ -315,7 +315,7 @@ table Album {
   illustration: [Illustration];
   shape: [Shape];
   style: [Style];
-  panel: [Panel];
+  stencil: [Stencil];
   publishing: [Publishing];
 }
 

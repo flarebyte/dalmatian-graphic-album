@@ -28,14 +28,7 @@ struct Clipping {
     height: Fraction;
 }
 
-union Composition { Clipping }
-
-table Panel {
-    metadata: Metadata;
-    composition: [Composition];
-}
-
-struct PanelId {
+struct StencilId {
     panelId: uint16;
 }
 
@@ -45,4 +38,11 @@ struct StyleId {
 
 struct IllustrationId {
     illustrationId: uint16;
+}
+
+union Composition { IllustrationId , StyleId, Vec2dFraction, Dim2dFraction }
+
+table Stencil {
+    metadata: Metadata;
+    composition: [Composition];
 }

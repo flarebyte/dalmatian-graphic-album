@@ -13,7 +13,7 @@ table Album {
   illustration: [Illustration];
   shape: [Shape];
   style: [Style];
-  panel: [Panel];
+  stencil: [Stencil];
   publishing: [Publishing];
 }
 

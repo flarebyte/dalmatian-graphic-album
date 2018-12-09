@@ -198,30 +198,6 @@ struct EllipticalArc {
 }
 
 union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve, EllipticalArc, Point}
-struct Section {
-    supplementId: uint16;
-}
-
-struct Page {
-    supplementId: uint16;
-}
-
-struct Tile {
-    supplementId: uint16;
-}
-
-struct Panel { //Title vs panel
-    supplementId: uint16; 
-}
-
-union TileInstruction { Section, Page, Tile, Panel, Vec2dFraction, Dim2dFraction, StencilId, StyleId }
-
-table TileLayout {
-    sequence: [TileInstruction];
-}
-
-union Layout { TileLayout }
-
 /** Illustrations and Panels */
 
 table Entity {
@@ -322,6 +298,30 @@ table Speech {
     interlocutor: [Interlocutor];
     transcript: [Transcript];
 }
+
+struct Section {
+    supplementId: uint16;
+}
+
+struct Page {
+    supplementId: uint16;
+}
+
+struct Tile {
+    supplementId: uint16;
+}
+
+struct Panel { //Title vs panel
+    supplementId: uint16; 
+}
+
+union TileInstruction { Section, Page, Tile, Panel, Vec2dFraction, Dim2dFraction, StencilId, StyleId }
+
+table TileLayout {
+    sequence: [TileInstruction];
+}
+
+union Layout { TileLayout }
 
 /** Album */
 

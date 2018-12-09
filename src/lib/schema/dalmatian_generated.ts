@@ -67,29 +67,6 @@ export enum Draw{
 /**
  * @enum
  */
-export enum TileInstruction{
-  NONE= 0,
-  Section= 1,
-  Page= 2,
-  Tile= 3,
-  Panel= 4,
-  Vec2dFraction= 5,
-  Dim2dFraction= 6,
-  StencilId= 7,
-  StyleId= 8
-};
-
-/**
- * @enum
- */
-export enum Layout{
-  NONE= 0,
-  TileLayout= 1
-};
-
-/**
- * @enum
- */
 export enum Compositing{
   NONE= 0,
   ShapeId= 1,
@@ -127,6 +104,29 @@ export enum Transcript{
   SubscriptText= 8,
   SuperscriptText= 9,
   MarkedText= 10
+};
+
+/**
+ * @enum
+ */
+export enum TileInstruction{
+  NONE= 0,
+  Section= 1,
+  Page= 2,
+  Tile= 3,
+  Panel= 4,
+  Vec2dFraction= 5,
+  Dim2dFraction= 6,
+  StencilId= 7,
+  StyleId= 8
+};
+
+/**
+ * @enum
+ */
+export enum Layout{
+  NONE= 0,
+  TileLayout= 1
 };
 
 /**
@@ -2617,299 +2617,6 @@ static createEllipticalArc(builder:flatbuffers.Builder, rx: number, ry: number, 
 /**
  * @constructor
  */
-export class Section {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Section
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Section {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @returns number
- */
-supplementId():number {
-  return this.bb!.readUint16(this.bb_pos);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number supplementId
- * @returns flatbuffers.Offset
- */
-static createSection(builder:flatbuffers.Builder, supplementId: number):flatbuffers.Offset {
-  builder.prep(2, 2);
-  builder.writeInt16(supplementId);
-  return builder.offset();
-};
-
-}
-/**
- * @constructor
- */
-export class Page {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Page
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Page {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @returns number
- */
-supplementId():number {
-  return this.bb!.readUint16(this.bb_pos);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number supplementId
- * @returns flatbuffers.Offset
- */
-static createPage(builder:flatbuffers.Builder, supplementId: number):flatbuffers.Offset {
-  builder.prep(2, 2);
-  builder.writeInt16(supplementId);
-  return builder.offset();
-};
-
-}
-/**
- * @constructor
- */
-export class Tile {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Tile
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Tile {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @returns number
- */
-supplementId():number {
-  return this.bb!.readUint16(this.bb_pos);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number supplementId
- * @returns flatbuffers.Offset
- */
-static createTile(builder:flatbuffers.Builder, supplementId: number):flatbuffers.Offset {
-  builder.prep(2, 2);
-  builder.writeInt16(supplementId);
-  return builder.offset();
-};
-
-}
-/**
- * @constructor
- */
-export class Panel {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Panel
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Panel {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @returns number
- */
-supplementId():number {
-  return this.bb!.readUint16(this.bb_pos);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number supplementId
- * @returns flatbuffers.Offset
- */
-static createPanel(builder:flatbuffers.Builder, supplementId: number):flatbuffers.Offset {
-  builder.prep(2, 2);
-  builder.writeInt16(supplementId);
-  return builder.offset();
-};
-
-}
-/**
- * @constructor
- */
-export class TileLayout {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns TileLayout
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):TileLayout {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param flatbuffers.ByteBuffer bb
- * @param TileLayout= obj
- * @returns TileLayout
- */
-static getRootAsTileLayout(bb:flatbuffers.ByteBuffer, obj?:TileLayout):TileLayout {
-  return (obj || new TileLayout).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @param number index
- * @returns TileInstruction
- */
-sequenceType(index: number):TileInstruction|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? /**  */ (this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)) : /**  */ (0);
-};
-
-/**
- * @returns number
- */
-sequenceTypeLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns Uint8Array
- */
-sequenceTypeArray():Uint8Array|null {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
-};
-
-/**
- * @param number index
- * @param flatbuffers.Table= obj
- * @returns ?flatbuffers.Table
- */
-sequence<T extends flatbuffers.Table>(index: number, obj:T):T|null {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__union(obj, this.bb!.__vector(this.bb_pos + offset) + index * 4) : null;
-};
-
-/**
- * @returns number
- */
-sequenceLength():number {
-  var offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param flatbuffers.Builder builder
- */
-static startTileLayout(builder:flatbuffers.Builder) {
-  builder.startObject(2);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset sequenceTypeOffset
- */
-static addSequenceType(builder:flatbuffers.Builder, sequenceTypeOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, sequenceTypeOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<TileInstruction> data
- * @returns flatbuffers.Offset
- */
-static createSequenceTypeVector(builder:flatbuffers.Builder, data:TileInstruction[]):flatbuffers.Offset {
-  builder.startVector(1, data.length, 1);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addInt8(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startSequenceTypeVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(1, numElems, 1);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset sequenceOffset
- */
-static addSequence(builder:flatbuffers.Builder, sequenceOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, sequenceOffset, 0);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param Array.<flatbuffers.Offset> data
- * @returns flatbuffers.Offset
- */
-static createSequenceVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number numElems
- */
-static startSequenceVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @returns flatbuffers.Offset
- */
-static endTileLayout(builder:flatbuffers.Builder):flatbuffers.Offset {
-  var offset = builder.endObject();
-  return offset;
-};
-
-}
-/**
- * @constructor
- */
 export class Entity {
   bb: flatbuffers.ByteBuffer|null = null;
 
@@ -4386,6 +4093,299 @@ static startTranscriptVector(builder:flatbuffers.Builder, numElems:number) {
  * @returns flatbuffers.Offset
  */
 static endSpeech(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class Section {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Section
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Section {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+supplementId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number supplementId
+ * @returns flatbuffers.Offset
+ */
+static createSection(builder:flatbuffers.Builder, supplementId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(supplementId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Page {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Page
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Page {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+supplementId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number supplementId
+ * @returns flatbuffers.Offset
+ */
+static createPage(builder:flatbuffers.Builder, supplementId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(supplementId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Tile {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Tile
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Tile {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+supplementId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number supplementId
+ * @returns flatbuffers.Offset
+ */
+static createTile(builder:flatbuffers.Builder, supplementId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(supplementId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Panel {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Panel
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Panel {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+supplementId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number supplementId
+ * @returns flatbuffers.Offset
+ */
+static createPanel(builder:flatbuffers.Builder, supplementId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(supplementId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class TileLayout {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns TileLayout
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):TileLayout {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param TileLayout= obj
+ * @returns TileLayout
+ */
+static getRootAsTileLayout(bb:flatbuffers.ByteBuffer, obj?:TileLayout):TileLayout {
+  return (obj || new TileLayout).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param number index
+ * @returns TileInstruction
+ */
+sequenceType(index: number):TileInstruction|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? /**  */ (this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)) : /**  */ (0);
+};
+
+/**
+ * @returns number
+ */
+sequenceTypeLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns Uint8Array
+ */
+sequenceTypeArray():Uint8Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param number index
+ * @param flatbuffers.Table= obj
+ * @returns ?flatbuffers.Table
+ */
+sequence<T extends flatbuffers.Table>(index: number, obj:T):T|null {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__union(obj, this.bb!.__vector(this.bb_pos + offset) + index * 4) : null;
+};
+
+/**
+ * @returns number
+ */
+sequenceLength():number {
+  var offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startTileLayout(builder:flatbuffers.Builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset sequenceTypeOffset
+ */
+static addSequenceType(builder:flatbuffers.Builder, sequenceTypeOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, sequenceTypeOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<TileInstruction> data
+ * @returns flatbuffers.Offset
+ */
+static createSequenceTypeVector(builder:flatbuffers.Builder, data:TileInstruction[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startSequenceTypeVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset sequenceOffset
+ */
+static addSequence(builder:flatbuffers.Builder, sequenceOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, sequenceOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param Array.<flatbuffers.Offset> data
+ * @returns flatbuffers.Offset
+ */
+static createSequenceVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number numElems
+ */
+static startSequenceVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endTileLayout(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
 };

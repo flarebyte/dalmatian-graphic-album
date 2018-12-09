@@ -1,9 +1,7 @@
-enum QuickName: byte { Alpha, Beta, Gamma, Delta, Epsilon, Zeta, Eta, Theta, Iota, Kappa, Lambda, Mu } 
-
 struct Point {
     x: uint32;
     y: uint32; 
-    name: QuickName;
+    sid: ubyte;
 }
 
 struct MoveTo {
@@ -53,7 +51,7 @@ struct SmoothQuadraticCurve {
     y: uint32;
 }
 
-enum ArcFlag: byte {LargeArcA, SmallArcA, LargeArcB, SmallArcB}
+enum ArcFlag: ubyte {LargeArcA, SmallArcA, LargeArcB, SmallArcB}
 
 struct EllipticalArc {
     rx: uint32;

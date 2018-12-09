@@ -10,7 +10,11 @@ struct Tile {
     supplementId: uint16;
 }
 
-union TileInstruction { Section, Page, Tile, Vec2dFraction, Dim2dFraction, StencilId, StyleId }
+struct Panel { //Title vs panel
+    supplementId: uint16; 
+}
+
+union TileInstruction { Section, Page, Tile, Panel, Vec2dFraction, Dim2dFraction, StencilId, StyleId }
 
 table TileLayout {
     sequence: [TileInstruction];

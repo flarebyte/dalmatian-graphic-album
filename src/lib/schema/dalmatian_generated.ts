@@ -40,24 +40,6 @@ export enum ObjectValue{
 /**
  * @enum
  */
-export enum QuickName{
-  Alpha= 0,
-  Beta= 1,
-  Gamma= 2,
-  Delta= 3,
-  Epsilon= 4,
-  Zeta= 5,
-  Eta= 6,
-  Theta= 7,
-  Iota= 8,
-  Kappa= 9,
-  Lambda= 10,
-  Mu= 11
-};
-
-/**
- * @enum
- */
 export enum ArcFlag{
   LargeArcA= 0,
   SmallArcA= 1,
@@ -90,10 +72,11 @@ export enum TileInstruction{
   Section= 1,
   Page= 2,
   Tile= 3,
-  Vec2dFraction= 4,
-  Dim2dFraction= 5,
-  StencilId= 6,
-  StyleId= 7
+  Panel= 4,
+  Vec2dFraction= 5,
+  Dim2dFraction= 6,
+  StencilId= 7,
+  StyleId= 8
 };
 
 /**
@@ -107,12 +90,14 @@ export enum Layout{
 /**
  * @enum
  */
-export enum Composition{
+export enum Compositing{
   NONE= 0,
-  IllustrationId= 1,
-  StyleId= 2,
-  Vec2dFraction= 3,
-  Dim2dFraction= 4
+  ShapeId= 1,
+  IllustrationId= 2,
+  Vec2d= 3,
+  Blending= 4,
+  FlipHorizontal= 5,
+  Invert= 6
 };
 
 /**
@@ -2049,23 +2034,23 @@ y():number {
 };
 
 /**
- * @returns QuickName
+ * @returns number
  */
-name():QuickName {
-  return /**  */ (this.bb!.readInt8(this.bb_pos + 8));
+sid():number {
+  return this.bb!.readUint8(this.bb_pos + 8);
 };
 
 /**
  * @param flatbuffers.Builder builder
  * @param number x
  * @param number y
- * @param QuickName name
+ * @param number sid
  * @returns flatbuffers.Offset
  */
-static createPoint(builder:flatbuffers.Builder, x: number, y: number, name: QuickName):flatbuffers.Offset {
+static createPoint(builder:flatbuffers.Builder, x: number, y: number, sid: number):flatbuffers.Offset {
   builder.prep(4, 12);
   builder.pad(3);
-  builder.writeInt8(name);
+  builder.writeInt8(sid);
   builder.writeInt32(y);
   builder.writeInt32(x);
   return builder.offset();
@@ -2537,7 +2522,7 @@ rotate():number {
  * @returns ArcFlag
  */
 arcFlag():ArcFlag {
-  return /**  */ (this.bb!.readInt8(this.bb_pos + 12));
+  return /**  */ (this.bb!.readUint8(this.bb_pos + 12));
 };
 
 /**
@@ -2682,6 +2667,43 @@ supplementId():number {
  * @returns flatbuffers.Offset
  */
 static createTile(builder:flatbuffers.Builder, supplementId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(supplementId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Panel {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Panel
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Panel {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+supplementId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number supplementId
+ * @returns flatbuffers.Offset
+ */
+static createPanel(builder:flatbuffers.Builder, supplementId: number):flatbuffers.Offset {
   builder.prep(2, 2);
   builder.writeInt16(supplementId);
   return builder.offset();
@@ -3246,96 +3268,6 @@ static endShape(builder:flatbuffers.Builder):flatbuffers.Offset {
 /**
  * @constructor
  */
-export class Clipping {
-  bb: flatbuffers.ByteBuffer|null = null;
-
-  bb_pos:number = 0;
-/**
- * @param number i
- * @param flatbuffers.ByteBuffer bb
- * @returns Clipping
- */
-__init(i:number, bb:flatbuffers.ByteBuffer):Clipping {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @returns number
- */
-illustrationId():number {
-  return this.bb!.readUint16(this.bb_pos);
-};
-
-/**
- * @param Fraction= obj
- * @returns Fraction|null
- */
-x(obj?:Fraction):Fraction|null {
-  return (obj || new Fraction).__init(this.bb_pos + 4, this.bb!);
-};
-
-/**
- * @param Fraction= obj
- * @returns Fraction|null
- */
-y(obj?:Fraction):Fraction|null {
-  return (obj || new Fraction).__init(this.bb_pos + 12, this.bb!);
-};
-
-/**
- * @param Fraction= obj
- * @returns Fraction|null
- */
-width(obj?:Fraction):Fraction|null {
-  return (obj || new Fraction).__init(this.bb_pos + 20, this.bb!);
-};
-
-/**
- * @param Fraction= obj
- * @returns Fraction|null
- */
-height(obj?:Fraction):Fraction|null {
-  return (obj || new Fraction).__init(this.bb_pos + 28, this.bb!);
-};
-
-/**
- * @param flatbuffers.Builder builder
- * @param number illustrationId
- * @param number x_numerator
- * @param number x_denominator
- * @param number y_numerator
- * @param number y_denominator
- * @param number width_numerator
- * @param number width_denominator
- * @param number height_numerator
- * @param number height_denominator
- * @returns flatbuffers.Offset
- */
-static createClipping(builder:flatbuffers.Builder, illustrationId: number, x_numerator: number, x_denominator: number, y_numerator: number, y_denominator: number, width_numerator: number, width_denominator: number, height_numerator: number, height_denominator: number):flatbuffers.Offset {
-  builder.prep(4, 36);
-  builder.prep(4, 8);
-  builder.writeInt32(height_denominator);
-  builder.writeInt32(height_numerator);
-  builder.prep(4, 8);
-  builder.writeInt32(width_denominator);
-  builder.writeInt32(width_numerator);
-  builder.prep(4, 8);
-  builder.writeInt32(y_denominator);
-  builder.writeInt32(y_numerator);
-  builder.prep(4, 8);
-  builder.writeInt32(x_denominator);
-  builder.writeInt32(x_numerator);
-  builder.pad(2);
-  builder.writeInt16(illustrationId);
-  return builder.offset();
-};
-
-}
-/**
- * @constructor
- */
 export class StencilId {
   bb: flatbuffers.ByteBuffer|null = null;
 
@@ -3447,6 +3379,136 @@ static createIllustrationId(builder:flatbuffers.Builder, illustrationId: number)
 /**
  * @constructor
  */
+export class ShapeId {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns ShapeId
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):ShapeId {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+shapeId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number shapeId
+ * @returns flatbuffers.Offset
+ */
+static createShapeId(builder:flatbuffers.Builder, shapeId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(shapeId);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Blending {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Blending
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Blending {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+operator():number {
+  return this.bb!.readUint8(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number operator
+ * @returns flatbuffers.Offset
+ */
+static createBlending(builder:flatbuffers.Builder, operator: number):flatbuffers.Offset {
+  builder.prep(1, 1);
+  builder.writeInt8(operator);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class FlipHorizontal {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns FlipHorizontal
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):FlipHorizontal {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static createFlipHorizontal(builder:flatbuffers.Builder):flatbuffers.Offset {
+  builder.prep(1, 0);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
+export class Invert {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns Invert
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):Invert {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static createInvert(builder:flatbuffers.Builder):flatbuffers.Offset {
+  builder.prep(1, 0);
+  return builder.offset();
+};
+
+}
+/**
+ * @constructor
+ */
 export class Stencil {
   bb: flatbuffers.ByteBuffer|null = null;
 
@@ -3482,9 +3544,9 @@ metadata(obj?:Metadata):Metadata|null {
 
 /**
  * @param number index
- * @returns Composition
+ * @returns Compositing
  */
-compositionType(index: number):Composition|null {
+compositingType(index: number):Compositing|null {
   var offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? /**  */ (this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)) : /**  */ (0);
 };
@@ -3492,7 +3554,7 @@ compositionType(index: number):Composition|null {
 /**
  * @returns number
  */
-compositionTypeLength():number {
+compositingTypeLength():number {
   var offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -3500,7 +3562,7 @@ compositionTypeLength():number {
 /**
  * @returns Uint8Array
  */
-compositionTypeArray():Uint8Array|null {
+compositingTypeArray():Uint8Array|null {
   var offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -3510,7 +3572,7 @@ compositionTypeArray():Uint8Array|null {
  * @param flatbuffers.Table= obj
  * @returns ?flatbuffers.Table
  */
-composition<T extends flatbuffers.Table>(index: number, obj:T):T|null {
+compositing<T extends flatbuffers.Table>(index: number, obj:T):T|null {
   var offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__union(obj, this.bb!.__vector(this.bb_pos + offset) + index * 4) : null;
 };
@@ -3518,7 +3580,7 @@ composition<T extends flatbuffers.Table>(index: number, obj:T):T|null {
 /**
  * @returns number
  */
-compositionLength():number {
+compositingLength():number {
   var offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -3540,18 +3602,18 @@ static addMetadata(builder:flatbuffers.Builder, metadataOffset:flatbuffers.Offse
 
 /**
  * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset compositionTypeOffset
+ * @param flatbuffers.Offset compositingTypeOffset
  */
-static addCompositionType(builder:flatbuffers.Builder, compositionTypeOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, compositionTypeOffset, 0);
+static addCompositingType(builder:flatbuffers.Builder, compositingTypeOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, compositingTypeOffset, 0);
 };
 
 /**
  * @param flatbuffers.Builder builder
- * @param Array.<Composition> data
+ * @param Array.<Compositing> data
  * @returns flatbuffers.Offset
  */
-static createCompositionTypeVector(builder:flatbuffers.Builder, data:Composition[]):flatbuffers.Offset {
+static createCompositingTypeVector(builder:flatbuffers.Builder, data:Compositing[]):flatbuffers.Offset {
   builder.startVector(1, data.length, 1);
   for (var i = data.length - 1; i >= 0; i--) {
     builder.addInt8(data[i]);
@@ -3563,16 +3625,16 @@ static createCompositionTypeVector(builder:flatbuffers.Builder, data:Composition
  * @param flatbuffers.Builder builder
  * @param number numElems
  */
-static startCompositionTypeVector(builder:flatbuffers.Builder, numElems:number) {
+static startCompositingTypeVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 };
 
 /**
  * @param flatbuffers.Builder builder
- * @param flatbuffers.Offset compositionOffset
+ * @param flatbuffers.Offset compositingOffset
  */
-static addComposition(builder:flatbuffers.Builder, compositionOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, compositionOffset, 0);
+static addCompositing(builder:flatbuffers.Builder, compositingOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, compositingOffset, 0);
 };
 
 /**
@@ -3580,7 +3642,7 @@ static addComposition(builder:flatbuffers.Builder, compositionOffset:flatbuffers
  * @param Array.<flatbuffers.Offset> data
  * @returns flatbuffers.Offset
  */
-static createCompositionVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+static createCompositingVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
   builder.startVector(4, data.length, 4);
   for (var i = data.length - 1; i >= 0; i--) {
     builder.addOffset(data[i]);
@@ -3592,7 +3654,7 @@ static createCompositionVector(builder:flatbuffers.Builder, data:flatbuffers.Off
  * @param flatbuffers.Builder builder
  * @param number numElems
  */
-static startCompositionVector(builder:flatbuffers.Builder, numElems:number) {
+static startCompositingVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 };
 

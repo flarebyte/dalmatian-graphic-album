@@ -129,12 +129,10 @@ table Metadata {
     assertion: [Assertion];
 }
 
-enum QuickName: byte { Alpha, Beta, Gamma, Delta, Epsilon, Zeta, Eta, Theta, Iota, Kappa, Lambda, Mu } 
-
 struct Point {
     x: uint32;
     y: uint32; 
-    name: QuickName;
+    sid: ubyte;
 }
 
 struct MoveTo {
@@ -184,7 +182,7 @@ struct SmoothQuadraticCurve {
     y: uint32;
 }
 
-enum ArcFlag: byte {LargeArcA, SmallArcA, LargeArcB, SmallArcB}
+enum ArcFlag: ubyte {LargeArcA, SmallArcA, LargeArcB, SmallArcB}
 
 struct EllipticalArc {
     rx: uint32;
@@ -208,7 +206,11 @@ struct Tile {
     supplementId: uint16;
 }
 
-union TileInstruction { Section, Page, Tile, Vec2dFraction, Dim2dFraction, StencilId, StyleId }
+struct Panel { //Title vs panel
+    supplementId: uint16; 
+}
+
+union TileInstruction { Section, Page, Tile, Panel, Vec2dFraction, Dim2dFraction, StencilId, StyleId }
 
 table TileLayout {
     sequence: [TileInstruction];
@@ -238,14 +240,6 @@ table Shape {
     illustrationId: uint16;
 }
 
-struct Clipping {
-    illustrationId: uint16;
-    x: Fraction;
-    y: Fraction;
-    width: Fraction;
-    height: Fraction;
-}
-
 struct StencilId {
     panelId: uint16;
 }
@@ -258,11 +252,25 @@ struct IllustrationId {
     illustrationId: uint16;
 }
 
-union Composition { IllustrationId , StyleId, Vec2dFraction, Dim2dFraction }
+struct ShapeId {
+    shapeId: uint16;
+}
+
+struct Blending {
+    operator: uint8; //Source-destination  0b1111
+}
+
+struct FlipHorizontal {}
+
+// swap 0 and 1
+struct Invert {}
+
+// Uses https://en.wikipedia.org/wiki/Polish_notation
+union Compositing { ShapeId, IllustrationId , Vec2d, Blending , FlipHorizontal, Invert}
 
 table Stencil {
     metadata: Metadata;
-    composition: [Composition];
+    compositing: [Compositing];
 }/** Speech */
 
 struct SpeakingCharacter {

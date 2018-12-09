@@ -8,18 +8,6 @@ struct ThinkingCharacter {
     entityId: uint16;
 }
 
-struct ScreamingCharacter {
-    entityId: uint16;
-}
-
-struct WhisperingCharacter {
-    entityId: uint16;
-}
-
-struct BroadcastingCharacter {
-    entityId: uint16;
-}
-
 struct ListeningCharacter {
     entityId: uint16;
 }
@@ -28,10 +16,33 @@ struct Narrator {
     entityId: uint16;
 }
 
-union Interlocutor { SpeakingCharacter, ThinkingCharacter, ScreamingCharacter,  WhisperingCharacter, BroadcastingCharacter, ListeningCharacter, Narrator }
+struct TextSelector {
+    start: uint32;
+    end: uint32;
+}
+struct Annotation {
+     supplementId: uint16;
+}
+
+struct StrongText {}
+
+struct EmphasizedText {}
+
+struct DeletedText {}
+
+struct SubscriptText {}
+struct SuperscriptText {}
+struct MarkedText {
+    styleId: uint16;
+}
+
+union Interlocutor { SpeakingCharacter, ThinkingCharacter, ListeningCharacter, Narrator, StyleId }
+
+union Transcript { LocalizedTextId, StyleId, TextSelector, Annotation, StrongText, EmphasizedText, DeletedText, SubscriptText, SuperscriptText, MarkedText }
 
 table Speech {
     metadata: Metadata;
     interlocutor: [Interlocutor];
+    transcript: [Transcript];
 }
 

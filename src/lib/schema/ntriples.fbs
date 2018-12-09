@@ -42,6 +42,10 @@ struct Dim2dFraction {
     height: Fraction;
 }
 
+struct LocalizedTextId {
+    localizedId: uint16;
+}
+
 /** RDF n-triples */
 
 table Curie {

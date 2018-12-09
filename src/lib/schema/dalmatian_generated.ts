@@ -118,7 +118,8 @@ export enum TileInstruction{
   Vec2dFraction= 5,
   Dim2dFraction= 6,
   StencilId= 7,
-  StyleId= 8
+  StyleId= 8,
+  SpeechId= 9
 };
 
 /**
@@ -3817,20 +3818,11 @@ __init(i:number, bb:flatbuffers.ByteBuffer):MarkedText {
 };
 
 /**
- * @returns number
- */
-styleId():number {
-  return this.bb!.readUint16(this.bb_pos);
-};
-
-/**
  * @param flatbuffers.Builder builder
- * @param number styleId
  * @returns flatbuffers.Offset
  */
-static createMarkedText(builder:flatbuffers.Builder, styleId: number):flatbuffers.Offset {
-  builder.prep(2, 2);
-  builder.writeInt16(styleId);
+static createMarkedText(builder:flatbuffers.Builder):flatbuffers.Offset {
+  builder.prep(1, 0);
   return builder.offset();
 };
 
@@ -4095,6 +4087,43 @@ static startTranscriptVector(builder:flatbuffers.Builder, numElems:number) {
 static endSpeech(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
+};
+
+}
+/**
+ * @constructor
+ */
+export class SpeechId {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns SpeechId
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):SpeechId {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns number
+ */
+speechId():number {
+  return this.bb!.readUint16(this.bb_pos);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param number speechId
+ * @returns flatbuffers.Offset
+ */
+static createSpeechId(builder:flatbuffers.Builder, speechId: number):flatbuffers.Offset {
+  builder.prep(2, 2);
+  builder.writeInt16(speechId);
+  return builder.offset();
 };
 
 }

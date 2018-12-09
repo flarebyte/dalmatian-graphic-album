@@ -32,9 +32,7 @@ struct DeletedText {}
 
 struct SubscriptText {}
 struct SuperscriptText {}
-struct MarkedText {
-    styleId: uint16;
-}
+struct MarkedText {}
 
 union Interlocutor { SpeakingCharacter, ThinkingCharacter, ListeningCharacter, Narrator, StyleId }
 
@@ -46,3 +44,6 @@ table Speech {
     transcript: [Transcript];
 }
 
+struct SpeechId {
+    speechId: uint16;
+}

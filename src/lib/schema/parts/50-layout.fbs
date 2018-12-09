@@ -14,7 +14,7 @@ struct Panel { //Title vs panel
     supplementId: uint16; 
 }
 
-union TileInstruction { Section, Page, Tile, Panel, Vec2dFraction, Dim2dFraction, StencilId, StyleId }
+union TileInstruction { Section, Page, Tile, Panel, Vec2dFraction, Dim2dFraction, StencilId, StyleId , SpeechId}
 
 table TileLayout {
     sequence: [TileInstruction];

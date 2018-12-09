@@ -285,9 +285,7 @@ struct DeletedText {}
 
 struct SubscriptText {}
 struct SuperscriptText {}
-struct MarkedText {
-    styleId: uint16;
-}
+struct MarkedText {}
 
 union Interlocutor { SpeakingCharacter, ThinkingCharacter, ListeningCharacter, Narrator, StyleId }
 
@@ -299,6 +297,9 @@ table Speech {
     transcript: [Transcript];
 }
 
+struct SpeechId {
+    speechId: uint16;
+}
 struct Section {
     supplementId: uint16;
 }
@@ -315,7 +316,7 @@ struct Panel { //Title vs panel
     supplementId: uint16; 
 }
 
-union TileInstruction { Section, Page, Tile, Panel, Vec2dFraction, Dim2dFraction, StencilId, StyleId }
+union TileInstruction { Section, Page, Tile, Panel, Vec2dFraction, Dim2dFraction, StencilId, StyleId , SpeechId}
 
 table TileLayout {
     sequence: [TileInstruction];

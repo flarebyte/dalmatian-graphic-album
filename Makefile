@@ -1,5 +1,9 @@
+install-js:
+	yarn install
+
 install:
 	brew install flatbuffers
+
 build-schema:
 	cat src/lib/schema/parts/*.fbs > src/lib/schema/dalmatian.fbs
 	cd src/lib/schema; flatc --ts --no-fb-import dalmatian.fbs

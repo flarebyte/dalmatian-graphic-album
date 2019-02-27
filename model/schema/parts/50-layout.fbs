@@ -1,0 +1,28 @@
+table Section {
+    supplementId: uint16;
+}
+
+table Page {
+    supplementId: uint16;
+}
+
+table Tile {
+    supplementId: uint16;
+}
+
+table Panel { //Title vs panel
+    supplementId: uint16; 
+}
+
+union TileIntableion { Section, Page, Tile, Panel, Vec2dFraction, Dim2dFraction, StencilId, StyleId , SpeechId}
+
+table TileIntableionItem {
+    item: TileIntableion;
+}
+
+table TileLayout {
+    sequence: [TileIntableionItem];
+}
+
+union Layout { TileLayout }
+

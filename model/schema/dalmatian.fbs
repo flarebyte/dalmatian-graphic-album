@@ -1,0 +1,373 @@
+table Vec2d {
+    x: uint32;
+    y: uint32;
+}
+
+table Vec2dFloat {
+    x: float;
+    y: float;
+}
+
+table Vec3d {
+    x: uint32;
+    y: uint32;
+    z: uint32;
+}
+
+table Vec3dFloat {
+    x: float;
+    y: float;
+    z: float;
+}
+
+table ColorRGBA {
+    r: uint16;
+    g: uint16;
+    b: uint16;
+    a: uint16;
+}
+
+table Fraction {
+    numerator: uint32;
+    denominator: uint32;
+}
+
+table Vec2dFraction {
+    x: Fraction;
+    y: Fraction;
+}
+
+table Dim2dFraction {
+    width: Fraction;
+    height: Fraction;
+}
+
+table LocalizedTextId {
+    localizedId: uint16;
+}
+
+/** RDF n-triples */
+
+table Curie {
+    prefix: string;
+}
+
+table IRI {
+    curie: Curie;
+    path: string (required);
+}
+
+table Localized {
+    text: string (required);
+    language: string (required);
+}
+
+table Text {
+    value: string (required);
+}
+
+table AnyURI {
+    value: string (required);
+    mediaType: string;
+}
+
+table IsoDateTime {
+    value: string (required);
+}
+
+table Bool {
+    value: bool;
+}
+
+table Uint8 {
+    value: [uint8];
+}
+
+table Uint16 {
+    value: [uint16];
+}
+
+table Uint32 {
+    value: [uint32];
+}
+
+union anyUint { Uint8, Uint16, Uint32 }
+
+table Float {
+    value: [float] (required);
+}
+
+table Vector2d {
+    value: Vec2d (required);
+}
+
+table Vector3d {
+    value: Vec3d (required);
+}
+
+table Vector2dFloat {
+    value: Vec2dFloat (required);
+}
+
+table Vector3dFloat {
+    value: Vec3dFloat (required);
+}
+
+table VectorColorRGBA {
+    value: ColorRGBA (required) ;
+}
+
+table VectorFraction {
+    value: Fraction (required) ;
+}
+
+union ObjectValue { IRI, Localized, Text, Bool, Uint8, Uint16, Uint32, Float, Vector2d, Vector3d, Vector2dFloat, Vector3dFloat, AnyURI, IsoDateTime, VectorColorRGBA, VectorFraction}
+
+table Assertion {
+    predicate: IRI (required);
+    objectValue: ObjectValue (required);
+}
+
+table Metadata {
+    id: uint32;
+    assertion: [Assertion];
+}
+
+table Point {
+    x: uint32;
+    y: uint32; 
+    sid: ubyte;
+}
+
+table MoveTo {
+    x: uint32;
+    y: uint32;
+}
+
+table LineTo {
+    x: uint32;
+    y: uint32;
+}
+
+table Horizontal {
+    x: uint32;
+}
+
+table Vertical {
+    y: uint32;
+}
+/** Curve */
+
+table CubicCurve {
+    x1: uint32;
+    y1: uint32;
+    x2: uint32;
+    y2: uint32;
+    x: uint32;
+    y: uint32;
+}
+
+table SmoothCubicCurve {
+    x2: uint32;
+    y2: uint32;
+    x: uint32;
+    y: uint32;
+}
+
+table QuadraticCurve {
+    x1: uint32;
+    y1: uint32;
+    x: uint32;
+    y: uint32;
+}
+
+table SmoothQuadraticCurve {
+    x: uint32;
+    y: uint32;
+}
+
+enum ArcFlag: ubyte {LargeArcA, SmallArcA, LargeArcB, SmallArcB}
+
+table EllipticalArc {
+    rx: uint32;
+    ry: uint32;
+    rotate: float32;
+    arcFlag: ArcFlag;
+    x: uint32;
+    y: uint32;
+}
+
+union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve, EllipticalArc, Point}
+
+table DrawItem {
+    action: Draw;
+}
+/** Illustrations and Panels */
+
+table Entity {
+    metadata: Metadata;
+}
+
+table Style {
+    metadata: Metadata;
+}
+
+table Illustration {
+    metadata: Metadata;
+    data: anyUint;
+}
+
+table Shape {
+    metadata: Metadata;
+    drawing: [DrawItem];
+    entityId: uint16;
+    illustrationId: uint16;
+}
+
+table StencilId {
+    panelId: uint16;
+}
+
+table StyleId {
+    styleId: uint16;
+}
+
+table IllustrationId {
+    illustrationId: uint16;
+}
+
+table ShapeId {
+    shapeId: uint16;
+}
+
+table Blending {
+    operator: uint8; //Source-destination  0b1111
+}
+
+table FlipHorizontal {}
+
+// swap 0 and 1
+table Invert {}
+
+// Uses https://en.wikipedia.org/wiki/Polish_notation
+union Compositing { ShapeId, IllustrationId , Vec2d, Blending , FlipHorizontal, Invert}
+
+table CompositingItem {
+    item: Compositing;
+}
+
+table Stencil {
+    metadata: Metadata;
+    compositing: [CompositingItem];
+}/** Speech */
+
+table SpeakingCharacter {
+    entityId: uint16;
+}
+
+table ThinkingCharacter {
+    entityId: uint16;
+}
+
+table ListeningCharacter {
+    entityId: uint16;
+}
+
+table Narrator {
+    entityId: uint16;
+}
+
+table TextSelector {
+    start: uint32;
+    end: uint32;
+}
+table Annotation {
+     supplementId: uint16;
+}
+
+table StrongText {}
+
+table EmphasizedText {}
+
+table DeletedText {}
+
+table SubscriptText {}
+table SuperscriptText {}
+table MarkedText {}
+
+union Interlocutor { SpeakingCharacter, ThinkingCharacter, ListeningCharacter, Narrator, StyleId }
+
+table InterlocatorItem {
+    item: Interlocutor;
+}
+
+union Transcript { LocalizedTextId, StyleId, TextSelector, Annotation, StrongText, EmphasizedText, DeletedText, SubscriptText, SuperscriptText, MarkedText }
+
+table TranscriptItem {
+    item: Transcript;
+}
+
+table Speech {
+    metadata: Metadata;
+    interlocutor: [InterlocatorItem];
+    transcript: [TranscriptItem];
+}
+
+table SpeechId {
+    speechId: uint16;
+}
+table Section {
+    supplementId: uint16;
+}
+
+table Page {
+    supplementId: uint16;
+}
+
+table Tile {
+    supplementId: uint16;
+}
+
+table Panel { //Title vs panel
+    supplementId: uint16; 
+}
+
+union TileIntableion { Section, Page, Tile, Panel, Vec2dFraction, Dim2dFraction, StencilId, StyleId , SpeechId}
+
+table TileIntableionItem {
+    item: TileIntableion;
+}
+
+table TileLayout {
+    sequence: [TileIntableionItem];
+}
+
+union Layout { TileLayout }
+
+/** Album */
+
+table Publishing {
+    metadata: Metadata;
+    layout: Layout;
+}
+
+table Album {
+  metadata: Metadata;
+  supplement: [Metadata];
+  entity: [Entity];
+  speech: [Speech];
+  localizedText: [Localized];
+  illustration: [Illustration];
+  shape: [Shape];
+  style: [Style];
+  stencil: [Stencil];
+  publishing: [Publishing];
+}
+
+root_type Album;
+namespace Dalmatian;
+
+file_identifier "DALN";
+file_extension "daln";
+
+attribute "priority";

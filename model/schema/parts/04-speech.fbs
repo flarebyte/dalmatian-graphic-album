@@ -1,0 +1,57 @@
+/** Speech */
+
+table SpeakingCharacter {
+    entityId: uint16;
+}
+
+table ThinkingCharacter {
+    entityId: uint16;
+}
+
+table ListeningCharacter {
+    entityId: uint16;
+}
+
+table Narrator {
+    entityId: uint16;
+}
+
+table TextSelector {
+    start: uint32;
+    end: uint32;
+}
+table Annotation {
+     supplementId: uint16;
+}
+
+table StrongText {}
+
+table EmphasizedText {}
+
+table DeletedText {}
+
+table SubscriptText {}
+table SuperscriptText {}
+table MarkedText {}
+
+union Interlocutor { SpeakingCharacter, ThinkingCharacter, ListeningCharacter, Narrator, StyleId }
+
+table InterlocatorItem {
+    item: Interlocutor;
+}
+
+union Transcript { LocalizedTextId, StyleId, TextSelector, Annotation, StrongText, EmphasizedText, DeletedText, SubscriptText, SuperscriptText, MarkedText }
+
+table TranscriptItem {
+    item: Transcript;
+}
+
+table Speech {
+    metadata: Metadata;
+    interlocutor: [InterlocatorItem];
+    transcript: [TranscriptItem];
+}
+
+table SpeechId {
+    speechId: uint16;
+}

@@ -1,10 +1,19 @@
-install-js:
-	yarn install
+SCHEMA = model/schema
+NAME = dalmatian
+TYPESCRIPT = typescript/src/lib
+
+install-ts:
+	cd typescript; yarn install
 
 install:
 	brew install flatbuffers
 
 build-schema:
-	cat src/lib/schema/parts/*.fbs > src/lib/schema/dalmatian.fbs
-	cd src/lib/schema; flatc --ts --no-fb-import dalmatian.fbs
-	cat src/lib/schema/parts/fbsheader.txt src/lib/schema/dalmatian_generated.ts > tmp && mv tmp src/lib/schema/dalmatian_generated.ts
+	cat $(SCHEMA)/parts/*.fbs > $(SCHEMA)/$(NAME).fbs
+
+generate-ts:
+	cd $(SCHEMA); flatc --ts --no-fb-import -o ../../$(TYPESCRIPT) $(NAME).fbs
+	cat $(SCHEMA)/parts/fbsheader.txt $(TYPESCRIPT)/$(NAME)_generated.ts > tmp && mv tmp $(TYPESCRIPT)/$(NAME)_generated.ts
+
+generate-go:
+	cd $(SCHEMA); flatc --go --no-fb-import -o ../../go $(NAME).fbs

@@ -1,0 +1,4 @@
+// tslint:disable: member-access member-ordering max-classes-per-file prefer-const no-class variable-name no-expression-statement no-object-mutation no-this readonly-keyword no-var-keyword typedef readonly-array no-namespace
+
+import {flatbuffers} from 'flatbuffers';
+export { flatbuffers };

@@ -1,0 +1,27 @@
+/** Album */
+
+table Publishing {
+    metadata: Metadata;
+    layout: Layout;
+}
+
+table Album {
+  metadata: Metadata;
+  supplement: [Metadata];
+  entity: [Entity];
+  speech: [Speech];
+  localizedText: [Localized];
+  illustration: [Illustration];
+  shape: [Shape];
+  style: [Style];
+  stencil: [Stencil];
+  publishing: [Publishing];
+}
+
+root_type Album;
+namespace Dalmatian;
+
+file_identifier "DALN";
+file_extension "daln";
+
+attribute "priority";

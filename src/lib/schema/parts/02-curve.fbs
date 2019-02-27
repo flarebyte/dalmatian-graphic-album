@@ -1,0 +1,65 @@
+struct Point {
+    x: uint32;
+    y: uint32; 
+    sid: ubyte;
+}
+
+struct MoveTo {
+    x: uint32;
+    y: uint32;
+}
+
+struct LineTo {
+    x: uint32;
+    y: uint32;
+}
+
+struct Horizontal {
+    x: uint32;
+}
+
+struct Vertical {
+    y: uint32;
+}
+/** Curve */
+
+struct CubicCurve {
+    x1: uint32;
+    y1: uint32;
+    x2: uint32;
+    y2: uint32;
+    x: uint32;
+    y: uint32;
+}
+
+struct SmoothCubicCurve {
+    x2: uint32;
+    y2: uint32;
+    x: uint32;
+    y: uint32;
+}
+
+struct QuadraticCurve {
+    x1: uint32;
+    y1: uint32;
+    x: uint32;
+    y: uint32;
+}
+
+struct SmoothQuadraticCurve {
+    x: uint32;
+    y: uint32;
+}
+
+enum ArcFlag: ubyte {LargeArcA, SmallArcA, LargeArcB, SmallArcB}
+
+struct EllipticalArc {
+    rx: uint32;
+    ry: uint32;
+    rotate: float32;
+    arcFlag: ArcFlag;
+    x: uint32;
+    y: uint32;
+}
+
+union Draw {MoveTo, LineTo, Horizontal, Vertical, CubicCurve, SmoothCubicCurve, QuadraticCurve, SmoothQuadraticCurve, EllipticalArc, Point}

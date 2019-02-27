@@ -1,0 +1,135 @@
+struct Vec2d {
+    x: uint32;
+    y: uint32;
+}
+
+struct Vec2dFloat {
+    x: float;
+    y: float;
+}
+
+struct Vec3d {
+    x: uint32;
+    y: uint32;
+    z: uint32;
+}
+
+struct Vec3dFloat {
+    x: float;
+    y: float;
+    z: float;
+}
+
+struct ColorRGBA {
+    r: uint16;
+    g: uint16;
+    b: uint16;
+    a: uint16;
+}
+
+struct Fraction {
+    numerator: uint32;
+    denominator: uint32;
+}
+
+struct Vec2dFraction {
+    x: Fraction;
+    y: Fraction;
+}
+
+struct Dim2dFraction {
+    width: Fraction;
+    height: Fraction;
+}
+
+struct LocalizedTextId {
+    localizedId: uint16;
+}
+
+/** RDF n-triples */
+
+table Curie {
+    prefix: string;
+}
+
+table IRI {
+    curie: Curie;
+    path: string (required);
+}
+
+table Localized {
+    text: string (required);
+    language: string (required);
+}
+
+table Text {
+    value: string (required);
+}
+
+table AnyURI {
+    value: string (required);
+    mediaType: string;
+}
+
+table IsoDateTime {
+    value: string (required);
+}
+
+table Bool {
+    value: bool;
+}
+
+table Uint8 {
+    value: [uint8];
+}
+
+table Uint16 {
+    value: [uint16];
+}
+
+table Uint32 {
+    value: [uint32];
+}
+
+union anyUint { Uint8, Uint16, Uint32 }
+
+table Float {
+    value: [float] (required);
+}
+
+table Vector2d {
+    value: Vec2d (required);
+}
+
+table Vector3d {
+    value: Vec3d (required);
+}
+
+table Vector2dFloat {
+    value: Vec2dFloat (required);
+}
+
+table Vector3dFloat {
+    value: Vec3dFloat (required);
+}
+
+table VectorColorRGBA {
+    value: ColorRGBA (required) ;
+}
+
+table VectorFraction {
+    value: Fraction (required) ;
+}
+
+union ObjectValue { IRI, Localized, Text, Bool, Uint8, Uint16, Uint32, Float, Vector2d, Vector3d, Vector2dFloat, Vector3dFloat, AnyURI, IsoDateTime, VectorColorRGBA, VectorFraction}
+
+table Assertion {
+    predicate: IRI (required);
+    objectValue: ObjectValue (required);
+}
+
+table Metadata {
+    id: uint32;
+    assertion: [Assertion];
+}
+
